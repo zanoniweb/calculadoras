@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+
+    <title>Calculdora Para Auferição de Áreas Edificadas.</title>
+    <style>
+       ol {
+            display: flex;
+            justify-content: space-between;
+            list-style-type: none;
+            font-family: Geneva;
+            background-color: black;
+            color: white;
+        }
+        a {
+            font-family: Geneva;
+            font-size: 20px;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            padding: 5px 5px;
+        }
+        a:hover {
+            color: blue;
+        }
+        a:active { 
+            color: red;
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 12px;
+            padding: 5px;
+        }
+        select, input[type="number"] {
+            width: 70%;
+        }
+        input[type="text"] {
+            width: 65%;
+            text-align: left;
+        }
+
+        #inscricao {
+            width: 15%; /* Ajusta a largura do campo de Inscrição Imobliária */
+        }  
+        
+        #areaTotalProjeto {
+            width: 10%; /* Ajusta a largura do campo da Área Total do Projeto */
+        }
+        
+        #analiseMetragem {
+            width: 25%; /* Ajusta a largura do campo do Cargo do Analista das metragens edificadas */
+        }
+
+        #nomeServidor {
+            width: 25%; /* Ajusta a largura do campo nome do servidor responsável pela coleta de dados */
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            font-style: italic;
+        }
+        @media print { 
+        #noprint { display:none; } 
+        body { background: #fff; }
+        }
+    </style>
+</head>
+
+<header>
+
+    <ol>
+
+        <li><a href="index.html">Boas Vindas</a></li>
+        <li><a href="calculadoradiferencadatas.html">Calculadora Diferença: Datas</a></li>
+        <li><a href="calculadorahistoricaiptu.html">Calculadora Evolução Histórica IPTU</a></li>
+        <li><a href="calculadorasaldo.html">Calculadora Saldos: IPTU</a></li>
+        <li><a href="calculadoravalorpercentual.html">Calculadora Variação de Valor e Percentual: IPTU</a></li>
+        <li><a href="micromanual.html">Micro Manual</a></li>
+        <li><a href="projetospendentes.html">Projetos Pendentes Edificações</a></li>
+
+    </ol>
+    
+</header>
+
+<body>
+
+<table id="tabela1">
+    
+<h2>Calculadora Para Auferição de Áreas Edificadas</h2>
+
+<label for="inscricao">Inscrição Imobiliária:</label>
+<input type="text" id="inscricao" maxlength="19" placeholder="Digite a inscrição" oninput="formatarInscricao()">
+
+<br><br>
+
+<label for="areaTotalProjeto">Área total do projeto aprovado pela Secretaria Municipal de Obras:</label>
+<input type="number" id="areaTotalProjeto" step="0.00001">
+
+<br><br>
+
+<label for="nomeServidor">Nome do Servidor (Responsável pela coleta de dados):</label>
+<input type="text" id="nomeServidor" name="nomeServidor" required>
+
+<br><br>
+
+<table id="tabelaAreas">
+    <thead>
+        <tr>
+            <th colspan="2">Responsável Pela Análise:</th>
+            <th colspan="8">
+                <select id="analiseMetragem" name="analiseMetragem">
+                    <option value="Selecione">Selecione</option>
+                    <option value="Agente_Fazendario">Agente Fazendário</option>
+                    <option value="Arquiteto">Arquiteto</option>
+                    <option value="Assistente_AdministrativoI">Assistente Administrativo I</option>
+                    <option value="Assistente_AdministrativoII">Assistente Administrativo II</option>
+                    <option value="Assistente_AdministrativoIII">Assistente Administrativo III</option>
+                    <option value="Assistente_AdministrativoIV">Assistente Administrativo IV</option>
+                    <option value="Assistente_AdministrativoV">Assistente Administrativo V</option>
+                    <option value="Assistente_AdministrativoVI">Assistente Administrativo VI</option>
+                    <option value="Assistente_Administrativo_Terceirizado">Assistente Administrativo Terceirizado</option>
+                    <option value="Auditor_Fiscal">Auditor Fiscal</option>
+                    <option value="Diretor_Departamento_Imobiliario">Diretor do Departamento Imobiliário</option>
+                    <option value="Engenheiro">Engenheiro</option>
+                    <option value="Fiscal_de_Obras">Fiscal de Obras</option>
+                    <option value="Outro">Outro</option>
+                </select>
+            </th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>Nome da Edificação</th>
+            <th colspan="8">Metragens (5 casas após a vírgula)</th>
+            <th>Subtotal (m²)</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <script>
+
+            function formatarInscricao() {
+            const input = document.getElementById('inscricao');
+            let valor = input.value;
+
+            // Remove qualquer caractere que não seja número
+            valor = valor.replace(/\D/g, '');
+
+            // Aplica a máscara XX.XXX.XXX.XXXX.XXX
+            if (valor.length > 2) valor = valor.replace(/^(\d{2})(\d)/, '$1.$2');
+            if (valor.length > 6) valor = valor.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+            if (valor.length > 9) valor = valor.replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3.$4');
+            if (valor.length > 13) valor = valor.replace(/^(\d{2})\.(\d{3})\.(\d{3})\.(\d{4})(\d)/, '$1.$2.$3.$4.$5');
+            
+            // Atualiza o valor do campo de entrada
+            input.value = valor;
+        }
+
+
+
+            const tiposEdificacao = [
+                "Selecione", "Apartamento Fundos", "Apartamento Frente", "Casa", "Edícula", "Sala Conjunto", "Loja", "Sub-Solo", "Galpão", "Telheiro", "Industria", "Outros"
+            ];
+
+            for (let i = 0; i < 10; i++) {
+                // Linha para Piso Superior
+                document.write('<tr>');
+                document.write('<td>');
+                document.write(`<select id="edificacao${i + 1}">`);
+                tiposEdificacao.forEach(tipo => {
+                    document.write(`<option value="${tipo}">${tipo}</option>`);
+                });
+                document.write('</select>');
+                document.write('<br>Piso Superior</td>');
+                for (let j = 1; j <= 8; j++) {
+                    document.write(`<td><input type="number" id="area${i + 1}L1C${j}" step="0.00001" value="0.00"></td>`);
+                }
+                document.write(`<td id="subtotal${i + 1}L1">0,00</td>`);
+                document.write('</tr>');
+
+                // Linha para Piso Terreo
+                document.write('<tr>');
+                document.write('<td>Piso Terreo</td>');
+                for (let j = 1; j <= 8; j++) {
+                    document.write(`<td><input type="number" id="area${i + 1}L2C${j}" step="0.00001" value="0.00"></td>`);
+                }
+                document.write(`<td id="subtotal${i + 1}L2">0,00</td>`);
+                document.write('</tr>');
+
+                // Linha para Sub-Solo
+                document.write('<tr>');
+                document.write('<td>Sub-Solo</td>');
+                for (let j = 1; j <= 8; j++) {
+                    document.write(`<td><input type="number" id="area${i + 1}L3C${j}" step="0.00001" value="0.00"></td>`);
+                }
+                document.write(`<td id="subtotal${i + 1}L3">0,00</td>`);
+                document.write('</tr>');
+
+                // Linha para Soma Parcial
+                document.write('<tr>');
+                document.write('<td>Soma Parcial</td>');
+                for (let j = 1; j <= 8; j++) {
+                    document.write('<td></td>'); // Células vazias para alinhamento
+                }
+                document.write(`<td id="somaParcial${i + 1}">0,00</td>`);
+                document.write('</tr>');
+            }
+        </script>
+    </tbody>
+</table>
+
+<br>
+<button class="btn" onclick="calcular()">Calcular</button>
+<button class="btn" onclick="limpar()">Limpar</button>
+<button class="btn" onclick="novoCalculo()">Carregar para novo Cálculo</button>
+<button onclick="print()">Imprimir</button>
+<button onclick="salvarPDF()">Salvar PDF</button>
+
+
+<h2>Resultado da Análise Técnica:</h2>
+<div id="resultadoElement">
+</div>
+
+</table id="tabela1">
+
+<br><br><br><br>
+
+<center>    
+    <footer>
+        <p>Site desenvolvido por Juliano <img src="https://d1yei2z3i6k35z.cloudfront.net/6946809/65e45ac72773e_zanoni.1.png" alt="Logo de Juliano Zanoni"></p>
+    </footer>
+</center>
+    
+<script>
+function formatInscricao(input) {
+    let value = input.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+    if (value.length <= 17) {
+        value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{3})(\d{2})$/, '$1.$2.$3.$4.$5.$6');
+        input.value = value;
+    }
+}
+
+function calcular() {
+    let totalArea = 0;
+    let areaTotalProjeto = parseFloat(document.getElementById('areaTotalProjeto').value) || 0;
+
+    for (let i = 0; i < 10; i++) {
+        let somaSuperior = 0, somaTerreo = 0, somaSubSolo = 0;
+
+        for (let j = 1; j <= 8; j++) {
+            somaSuperior += parseFloat(document.getElementById(`area${i + 1}L1C${j}`).value) || 0;
+            somaTerreo += parseFloat(document.getElementById(`area${i + 1}L2C${j}`).value) || 0;
+            somaSubSolo += parseFloat(document.getElementById(`area${i + 1}L3C${j}`).value) || 0;
+        }
+
+        let subtotalSuperior = somaSuperior.toFixed(5);
+        let subtotalTerreo = somaTerreo.toFixed(5);
+        let subtotalSubSolo = somaSubSolo.toFixed(5);
+
+        document.getElementById(`subtotal${i + 1}L1`).textContent = subtotalSuperior;
+        document.getElementById(`subtotal${i + 1}L2`).textContent = subtotalTerreo;
+        document.getElementById(`subtotal${i + 1}L3`).textContent = subtotalSubSolo;
+
+        let somaParcial = (somaSuperior + somaTerreo + somaSubSolo).toFixed(5);
+        document.getElementById(`somaParcial${i + 1}`).textContent = somaParcial;
+
+        totalArea += parseFloat(somaParcial);
+    }
+
+    let resultadoElement = document.getElementById("resultadoElement");
+    let diff = totalArea - areaTotalProjeto;
+
+    if (areaTotalProjeto === 0) {
+        resultadoElement.innerHTML = '<span style="color: red;">Erro: Por favor, insira a área total do projeto aprovado.</span>';
+        return;
+    }
+
+    if (diff === 0) {
+        resultadoElement.innerHTML = '<span style="color: green;">ÁREAS EDIFICADAS CONFEREM COM O PROJETO APROVADO.</span>';
+    } else if (diff < 0) {
+        resultadoElement.innerHTML = `ÁREAS EDIFICADAS SÃO MENORES COMPARADAS AO PROJETO OFICIAL. Diferença: <span style="color: red;">${Math.abs(diff.toFixed(5))} m²</span>`;
+    } else {
+        resultadoElement.innerHTML = `ÁREAS EDIFICADAS SÃO MAIORES COMPARADAS AO PROJETO OFICIAL. Diferença: <span style="color: red;">${diff.toFixed(5)} m²</span>`;
+    }
+}
+
+function limpar() {
+    document.querySelectorAll("input[type='number']").forEach(input => {
+        input.value = "0.00";
+    });
+    document.getElementById("resultado").innerHTML = "";
+}
+
+function novoCalculo() {     window.location.href = 'calculadoraareas.html'; }
+
+function salvarPDF() {
+    const { jsPDF } = window.jspdf;
+    let doc = new jsPDF();
+
+    // Captura os valores dos campos de entrada
+    let inscricao = document.getElementById("inscricao").value;
+    let areaTotal = document.getElementById("areaTotalProjeto").value;
+    let nomeServidor = document.getElementById("nomeServidor").value;
+    let analiseMetragem = document.getElementById("analiseMetragem").value;
+    let resultadoElement = document.getElementById("resultadoElement").textContent; // Captura o resultado corretamente
+
+    // Adiciona os dados ao PDF
+    doc.setFontSize(14);
+    doc.text("Calculadora Para Auferição de Áreas Edificadas", 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Inscrição Imobiliária: ${inscricao}`, 20, 30);
+    doc.text(`Área Total do Projeto: ${areaTotal} m²`, 20, 40);
+    doc.text(`Nome do Servidor: ${nomeServidor}`, 20, 50);
+    doc.text(`Análise da Metragem: ${analiseMetragem}`, 20, 60);
+
+    // Quebra o texto do resultado para evitar corte
+    let resultadoFormatado = doc.splitTextToSize(`Resultado: ${resultadoElement}`, 170); // Largura ajustada para o PDF
+    doc.text(resultadoFormatado, 20, 70); 
+
+    // Captura a tabela e converte para imagem
+    html2canvas(document.getElementById("tabelaAreas")).then(canvas => {
+        let imgData = canvas.toDataURL("image/png");
+        let imgWidth = 180; // Largura da imagem no PDF
+        let imgHeight = (canvas.height * imgWidth) / canvas.width; // Ajusta a altura proporcionalmente
+
+        doc.addImage(imgData, "PNG", 15, 90, imgWidth, imgHeight);
+        doc.save("relatorio_metragem.pdf");
+    });
+}
+
+
+</script>
+
+</body>
+
+</html>

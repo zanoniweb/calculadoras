@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Diferença de Datas</title>
+
+<head>
+<style>
+
+ol {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none; /* Alterado de 'nome' para 'none' */
+    font-family: Geneva;
+    background-color: black;
+    color: white;
+}
+
+a {
+    font-family: Geneva;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    padding: 5px 5px;
+}
+
+a:hover {
+    color: blue;
+}
+
+a:active { 
+    color: red;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input {
+    margin-bottom: 10px;
+}
+
+button {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
+
+#resultado {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.footer {
+    margin-top: auto;
+    text-align: center;
+    font-style: italic;
+}
+@media print { 
+#noprint { display:none; } 
+body { background: #fff; }
+}
+
+</style>
+
+</head>
+
+<header>
+
+    <ol>
+
+        <li><a href="index.html">Boas Vindas</a></li>
+        <li><a href="calculadoraareas.html">Calculadora Áreas: Edificadas</a></li>
+        <li><a href="calculadorahistoricaiptu.html">Calculadora Evolução Histórica IPTU</a></li>
+        <li><a href="calculadorasaldo.html">Calculadora Saldos: IPTU</a></li>
+        <li><a href="calculadoravalorpercentual.html">Calculadora Variação de Valor e Percentual: IPTU</a></li>
+        <li><a href="micromanual.html">Micro Manual</a></li>
+        <li><a href="projetospendentes.html">Projetos Pendentes Edificações</a></li>
+    
+    </ol>
+
+
+</header>
+
+<br><br><br><br>
+
+<body>
+
+    <i>
+
+    <div class="container">
+        
+        <h1>Calculadora de Diferença de Datas</h1>
+        <label for="dataInicial">Data Inicial:</label>
+        <input type="date" id="dataInicial">
+        <label for="dataFinal">Data Final:</label>
+        <input type="date" id="dataFinal">
+
+        <br>
+
+        <button onclick="calcularDiferenca()">Calcular</button>
+        <button onclick="limparCampos()">Limpar</button>
+        <button class="btn" onclick="novoCalculo()">Carregar para novo Cálcululo</button>
+        <button onclick="print()">Imprimir</button>
+    
+        <b><p id="resultado"></p></b>
+    
+    </div>
+
+    
+
+
+<br><br><br><br><br><br>
+
+
+<center>
+    <i>    
+<footer>
+
+    <p>Site desenvolvido por Juliano <img src="https://d1yei2z3i6k35z.cloudfront.net/6946809/65e45ac72773e_zanoni.1.png" alt="Logo de Juliano Zanoni"></p>
+
+</footer>
+</center>
+
+</i>
+
+<script>
+
+function calcularDiferenca() {
+    const dataInicial = new Date(document.getElementById('dataInicial').value);
+    const dataFinal = new Date(document.getElementById('dataFinal').value);
+
+    if (!dataInicial || !dataFinal || dataInicial > dataFinal) {
+        document.getElementById('resultado').textContent = 'Por favor, insira datas válidas.';
+        return;
+    }
+
+    let anos = dataFinal.getFullYear() - dataInicial.getFullYear();
+    let meses = dataFinal.getMonth() - dataInicial.getMonth();
+    let dias = dataFinal.getDate() - dataInicial.getDate();
+
+    if (dias < 0) {
+        meses--;
+        dias += new Date(dataFinal.getFullYear(), dataFinal.getMonth(), 0).getDate();
+    }
+
+    if (meses < 0) {
+        anos--;
+        meses += 12;
+    }
+
+    document.getElementById('resultado').textContent = `Resultado da diferença entre as duas datas é: ${anos} ano(s), ${meses} mês(es) e ${dias} dia(s).`;
+}
+
+function limparCampos() {
+    document.getElementById('dataInicial').value = '';
+    document.getElementById('dataFinal').value = '';
+    document.getElementById('resultado').textContent = '';
+}
+
+function novoCalculo() {     window.location.href = 'calculadoradiferencadatas.html'; } 
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de IPTU</title>
+    <style>
+        ol {
+            display: flex;
+            justify-content: space-between;
+            list-style-type: none;
+            font-family: Geneva;
+            background-color: black;
+            color: white;
+        }
+        a {
+            font-family: Geneva;
+            font-size: 20px;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            padding: 5px 5px;
+        }
+        a:hover { color: blue; }
+        a:active { color: red; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 { text-align: center; }
+        .inputs {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: calc(100% - 10px);
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover { background-color: #4cae4c; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th { background-color: #f2f2f2; }
+        @media print {
+            #noprint { display: none; }
+            body { background: #fff; }
+        }
+    </style>
+</head>
+
+<header>
+
+    <ol>
+
+        <li><a href="index.html">Boas Vindas</a></li>
+        <li><a href="calculadoraareas.html">Calculadora Áreas: Edificadas</a></li>
+        <li><a href="calculadoradiferencadatas.html">Calculadora Diferença: Datas</a></li>
+        <li><a href="calculadorasaldo.html">Calculadora Saldos: IPTU</a></li>
+        <li><a href="calculadoravalorpercentual.html">Calculadora Variação de Valor e Percentual: IPTU</a></li>
+        <li><a href="micromanual.html">Micro Manual</a></li>
+        <li><a href="projetospendentes.html">Projetos Pendentes Edificações</a></li>
+    
+    </ol>
+
+</header>
+
+<body>
+    <div class="container">
+        <h1>Calculadora de Evolução Histórica de IPTU: Edificações:</h1>
+        <div class="inputs">
+            <label for="valorInicial">Valor Inicial do IPTU:</label>
+            <input type="number" id="valorInicial" required>
+            <label for="dataInicial">Ano Inicial:</label>
+            <input type="number" id="dataInicial" required>
+            <label for="valorFinal">Valor Final do IPTU:</label>
+            <input type="number" id="valorFinal" required>
+            <label for="dataFinal">Ano Final:</label>
+            <input type="number" id="dataFinal" required>
+            <button id="calcular">Calcular</button>
+            <button class="btn" onclick="limpar()">Limpar</button>
+            <button class="btn" onclick="novoCalculo()">Carregar para novo Cálculo</button>
+            <button onclick="print()">Imprimir</button>
+        </div>
+        <table id="resultado" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Ano</th>
+                    <th>Valor Corrigido</th>
+                    <th>Observações</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        const taxas = {
+            1998: 0, 1999: 0, 2000: 0, 2001: 16.69, 2002: 11.04, 2003: 11,
+            2004: 9.92, 2005: 10, 2006: 5, 2007: 3.5, 2008: 4.12, 2009: 6.39,
+            2010: 0, 2011: 0, 2012: 0, 2013: 0, 2014: 0, 2015: 0, 2016: 13.07,
+            2017: 7.87, 2018: 7.99, 2019: 9.85, 2020: 7.82, 2021: 9.2, 
+            2022: 15.963, 2023: 11.76, 2024: 10.109, 2025: 10.048,
+        };
+
+        document.getElementById("calcular").addEventListener("click", function() {
+            const valorInicial = parseFloat(document.getElementById("valorInicial").value);
+            const anoInicial = parseInt(document.getElementById("dataInicial").value);
+            const valorFinal = parseFloat(document.getElementById("valorFinal").value);
+            const anoFinal = parseInt(document.getElementById("dataFinal").value);
+
+            const tbody = document.querySelector("#resultado tbody");
+            tbody.innerHTML = ""; // Limpar resultados anteriores
+            let valorCorrigido = valorInicial;
+            let valorEsperado = valorInicial;
+
+            for (let ano = anoInicial; ano <= anoFinal; ano++) {
+                const taxa = taxas[ano] || 0;
+
+                if (ano !== anoInicial) {
+                    valorCorrigido *= (1 + taxa / 100); // Corrigir valor do ano atual
+                    valorCorrigido = Math.round(valorCorrigido * 100) / 100; // Arredondar para duas casas decimais
+                }
+
+                const tr = document.createElement("tr");
+                const obs = document.createElement("td");
+
+                tr.innerHTML = `
+                    <td>${ano}</td>
+                    <td>R$ ${valorCorrigido.toFixed(2)}</td>
+                `;
+
+                if (ano === anoFinal && valorCorrigido < valorFinal) {
+                    obs.innerText = "Correção abaixo do esperado!";
+                    obs.style.color = "orange";
+                } else if (ano === anoFinal && valorCorrigido > valorFinal) {
+                    obs.innerText = "Correção acima do esperado!";
+                    obs.style.color = "red";
+                } else {
+                    obs.innerText = "Correção dentro do esperado!";
+                    obs.style.color = "green";
+                }
+
+                tr.appendChild(obs);
+                tbody.appendChild(tr);
+            }
+
+            document.getElementById("resultado").style.display = "table";
+        });
+
+        function limpar() {
+            document.getElementById("valorInicial").value = '';
+            document.getElementById("dataInicial").value = '';
+            document.getElementById("valorFinal").value = '';
+            document.getElementById("dataFinal").value = '';
+            document.querySelector("#resultado tbody").innerHTML = "";
+            document.getElementById("resultado").style.display = "none";
+        }
+
+        function novoCalculo() {
+            window.location.href = 'calculadorahistoricaiptu.html';
+        }
+    </script>
+
+    <center>
+        <i>
+            <footer>
+                <p>Site desenvolvido por Juliano <img src="https://d1yei2z3i6k35z.cloudfront.net/6946809/65e45ac72773e_zanoni.1.png" alt="Logo de Juliano Zanoni"></p>
+            </footer>
+        </i>
+    </center>
+</body>
+</html>
