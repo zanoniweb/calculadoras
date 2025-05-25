@@ -12,29 +12,70 @@
 
 
     <title>Calculdora Para Auferição de Áreas Edificadas.</title>
+    
     <style>
-       ol {
-            display: flex;
-            justify-content: space-between;
-            list-style-type: none;
-            font-family: Geneva;
-            background-color: black;
-            color: white;
+       
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    header {
+        width: 100%;
+    }
+
+    ol {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        list-style-type: none;
+        font-family: Geneva;
+        background-color: black;
+        padding: 10px;
+    }
+
+    li {
+        margin: 5px;
+    }
+
+    a {
+        font-family: Geneva;
+        font-size: 18px;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    a:hover {
+        color: blue;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    a:active {
+        color: red;
+    }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 768px) {
+        ol {
+            flex-direction: column;
+            align-items: center;
         }
+
         a {
-            font-family: Geneva;
+            display: block;
+            width: 90%;
             font-size: 20px;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            padding: 5px 5px;
         }
-        a:hover {
-            color: blue;
-        }
-        a:active { 
-            color: red;
-        }
+    }
+
+    /* Final da Responsividade para telas menores */
+
         table, th, td {
             border: 1px solid black;
             border-collapse: collapse;
@@ -249,10 +290,12 @@
 
 <br><br><br><br>
 
-<center>    
+<center>
+    <i>    
     <footer>
         <p>Site desenvolvido por Juliano <img src="https://d1yei2z3i6k35z.cloudfront.net/6946809/65e45ac72773e_zanoni.1.png" alt="Logo de Juliano Zanoni"></p>
     </footer>
+    </i>
 </center>
     
 <script>

@@ -7,31 +7,66 @@
     
     <style>
 
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    header {
+        width: 100%;
+    }
+
     ol {
-    display: flex;
-    justify-content: space-between;
-    list-style-type: none; /* Alterado de 'nome' para 'none' */
-    font-family: Geneva;
-    background-color: black;
-    color: white;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        list-style-type: none;
+        font-family: Geneva;
+        background-color: black;
+        padding: 10px;
+    }
+
+    li {
+        margin: 5px;
     }
 
     a {
-    font-family: Geneva;
-    font-size: 20px;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    padding: 5px 5px;
+        font-family: Geneva;
+        font-size: 18px;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
     }
 
     a:hover {
-    color: blue;
+        color: blue;
+        background-color: rgba(255, 255, 255, 0.1);
     }
 
-    a:active { 
-    color: red; 
+    a:active {
+        color: red;
     }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 768px) {
+        ol {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        a {
+            display: block;
+            width: 90%;
+            font-size: 20px;
+        }
+    }
+
+    /* Final da Responsividade para telas menores */
 
     h1 {
     font-family: Arial, Helvetica, sans-serif;
@@ -77,7 +112,6 @@
 
     <br>
     
-    <p>O objetivo principal desse site foi o de unicamente colaborar com os servidores.</p>
     <p>Informo que o site foi desenvolvido pelo servidor público municipal, com o único objeto de auxiliar outros servidores públicos municipais em cálculos rotineiros que tornam as rotinas administrativas muito prejudicas em questão de tempo na análise de certas demandas de conferências de cálculos matemáticos. Portanto, nesse contexto foram desenvolvidas as respectivas calculadoras e um formulário até a presente data.</p>
 
     <br>

@@ -10,35 +10,69 @@
     
     <style>
 
-ol {
-    display: flex;
-    justify-content: space-between;
-    list-style-type: none; /* Alterado de 'nome' para 'none' */
-    font-family: Geneva;
-    background-color: black;
-    color: white;
-}
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-a {
-    font-family: Geneva;
-    font-size: 20px;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    padding: 5px 5px;
-}
+    header {
+        width: 100%;
+    }
 
-a:hover {
-    color: blue;
-}
+    ol {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        list-style-type: none;
+        font-family: Geneva;
+        background-color: black;
+        padding: 10px;
+    }
 
-a:active { 
-    color: red;
-}        
+    li {
+        margin: 5px;
+    }
+
+    a {
+        font-family: Geneva;
+        font-size: 18px;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    a:hover {
+        color: blue;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    a:active {
+        color: red;
+    }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 768px) {
+        ol {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        a {
+            display: block;
+            width: 90%;
+            font-size: 20px;
+        }
+    }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    font-size: 14px;
 }
 
 td {
@@ -82,9 +116,28 @@ input {
     width: 80px; /* Ajusta a largura dos inputs de quadra e lote */
 }
 
+#cpfCnpj {
+     width: 180px; /* Ajusta a largura dos inputs do cpf ou cnpj do requerente */
+}
 
-#inscricao, #bairro {
-    width: 40%; /* Ajusta a largura do campo de inscrição e bairro */
+#nomeRequerente {
+     width: 250px; /* Ajusta a largura dos inputs do nome do requerente */
+}
+
+#nomeServidor {
+     width: 250px; /* Ajusta a largura dos inputs do nome do servidor */
+}
+
+#cargoServidor {
+     width: 300px; /* Ajusta a largura dos inputs do cargo do servidor */
+}
+
+#bairro {
+     width: 300px; /* Ajusta a largura dos inputs do bairro */
+}
+
+#inscricao {
+    width: 40%; /* Ajusta a largura do campo de inscrição */
 }
 
 #documentoDigitalizado {
@@ -95,68 +148,7 @@ input {
     width: 25%; /* Ajusta a largura do campo Número da Matrícula */
 }
 
-
-h1 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
-    color: black;
-}
-
-h2 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
-    color: black;
-}
-
-h3 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
-    color: black;
-}
-
-h4 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
-    color: black;
-}
-
-h5 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
-    color: black;
-}
-
-h6 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
-    color: black;
-}
-
-h7 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
-    color: black;
-}
-
-h8 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
-    color: black;
-}
-
-h9 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
-    color: black;
-}
-
-h10 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
-    color: black;
-}
-
-h11 {
+h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11 {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 30px;
     color: black;
@@ -2286,10 +2278,14 @@ button:hover {
 
     </table>
 
+    <br><br>
     
     <button class="btn" onclick="novoCalculo()">Carregar para novo preenchimento</button>
     <button onclick="print()">Imprimir</button>
     <button onclick="salvarEmPDF()">Salvar PDF</button>
+
+    <button onclick="mostrarProximaTabela()">Adicionar Edificação</button>
+    <button onclick="removerUltimaTabela()">Remover Última Edificação</button>
 
     
     <center>
@@ -2426,8 +2422,45 @@ function salvarEmPDF() {
     doc.save("formulario_edificacoes.pdf");
 }
 
+//Código inicial para filtar a quantidade de tabelas de edificação 
+let tabelaAtual = 1;
+    const maxTabelas = 10;
 
+    window.onload = function() {
+        // Ao carregar a página, exibe apenas a primeira tabela
+        for (let i = 1; i <= maxTabelas; i++) {
+            const tabela = document.getElementById(`edificacao${i}`);
+            if (tabela) {
+                tabela.style.display = (i === 1) ? 'block' : 'none';
+            }
+        }
+    }
 
+    function mostrarProximaTabela() {
+        if (tabelaAtual < maxTabelas) {
+            tabelaAtual++;
+            const tabela = document.getElementById(`edificacao${tabelaAtual}`);
+            if (tabela) {
+                tabela.style.display = 'block';
+            }
+        } else {
+            alert("Você já adicionou o máximo de 10 edificações.");
+        }
+    }
+
+    function removerUltimaTabela() {
+        if (tabelaAtual > 1) {
+            const tabela = document.getElementById(`edificacao${tabelaAtual}`);
+            if (tabela) {
+                tabela.style.display = 'none';
+                // NÃO apaga os dados, apenas oculta a tabela
+            }
+            tabelaAtual--;
+        } else {
+            alert("Pelo menos uma edificação deve estar visível.");
+        }
+    }
+//Código final para filtar a quantidade de tabelas de edificação 
 </script>
 
 </html>
