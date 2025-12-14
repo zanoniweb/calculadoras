@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB PROGRAMA SISTEMA DE APOIO a SERVIDORES PÚBLICOS MUNICIPAIS (S. A. S. P. M.): Calculadora de IPTU</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* Reset Básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    width: 100%;
+}
+
+/* Estilos Globais do Corpo e Container */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0 0 40px 0; /* Ajuste o padding inferior para o rodapé */
+}
+
+.container {
+    max-width: 1000px; 
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 { 
+    text-align: center; 
+    margin-bottom: 20px;
+}
+
+/* Estilos de Input e Botão */
+.inputs {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: calc(100% - 10px);
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+button {
+    margin: 5px 5px 5px 0;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover { 
+    background-color: #4cae4c; 
+}
+
+/* Estilos de Tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th { 
+    background-color: #f2f2f2; 
+}
+
+/* ----------------------------------- */
+/* ESTILIZAÇÃO DO MENU DE NAVEGAÇÃO */
+/* ----------------------------------- */
+
+ol {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    list-style-type: none;
+    font-family: Geneva;
+    background-color: black;
+    padding: 10px;
+}
+
+li {
+    margin: 5px;
+}
+
+a {
+    font-family: Geneva;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    /* Estilos de Layout para o Menu (Ícone + Texto) */
+    display: flex; 
+    align-items: center; 
+    font-size: 1rem;
+}
+
+a:hover {
+    color: blue;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+a:active {
+    color: red;
+}
+
+ol li a i.fas {
+    width: 25px; 
+    text-align: center;
+    margin-right: 10px; 
+    color: #007bff; 
+    font-size: 1.1rem;
+}
+
+/* Estilo para o item 'Sair' */
+ol li:first-child a { 
+    font-weight: bold;
+}
+
+ol li:first-child a i.fas {
+    color: #dc3545; 
+}
+
+ol li:first-child a:hover {
+    background-color: #dc3545;
+    color: #fff; 
+}
+ol li:first-child a:hover i.fas {
+    color: #fff; 
+}
+
+/* ----------------------------------- */
+/* ESTILIZAÇÃO DO RODAPÉ (FOOTER) */
+/* ----------------------------------- */
+
+footer {
+    text-align: center;
+    padding: 15px 0;
+    font-size: 0.9em;
+    color: #555;
+    background-color: #eee;
+    width: 100%;
+    margin-top: 20px;
+    font-style: italic;
+}
+
+footer img {
+    height: 1.2em;
+    vertical-align: middle;
+}
+
+
+/* Responsividade e Impressão */
+
+@media (max-width: 768px) {
+    ol {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    a {
+        display: block;
+        width: 90%;
+        font-size: 20px;
+    }
+}
+
+@media print {
+    #noprint { display: none; }
+    body { background: #fff; padding: 0; }
+    .container { box-shadow: none; border: none; margin: 0; padding: 0; max-width: none; }
+    button, .inputs label, .inputs input { display: none; }
+    table { margin-top: 0; }
+    footer { display: none; }
+}
+
+</style>
+</head>
+
+<header>
+
+    <ol>
+
+    <li><a href="index.html"><i class="fas fa-sign-out-alt"></i>Sair</a></li> 
+    <li><a href="calculadoraareas.html"><i class="fas fa-ruler-combined"></i> Calculadora Áreas: Edificadas</a></li>
+    <li><a href="calculadoradiferencadatas.html"><i class="fas fa-calendar-alt"></i> Calculadora Diferença: Datas</a></li>
+    <li><a href="calculadorahistoricaiptu.html"><i class="fas fa-chart-line"></i> Calculadora Evolução Histórica IPTU (1)</a></li>    
+    <li><a href="calculadorasaldo.html"><i class="fas fa-balance-scale"></i> Calculadora Saldos: IPTU</a></li>
+    <li><a href="calculadoravalorpercentual.html"><i class="fas fa-percentage"></i> Calculadora Variação de Valor e Percentual: IPTU</a></li>
+    <li><a href="micromanual.html"><i class="fas fa-book-open"></i> Micro Manual</a></li>
+    <li><a href="mapatecnicotres.html"><i class="fas fa-map-marked-alt"></i> Mapas Temáticos</a></li>
+    <li><a href="prescricao.html"><i class="fas fa-file-signature"></i> Formulário de Prescrição</a></li>
+    <li><a href="projetospendentes.html"><i class="fas fa-clipboard-list"></i> Projetos Pendentes Edificações</a></li>
+    <li><a href="geracaodocumentosservidores.html"><i class="fas fa-chevron-left"></i>Voltar ao Módulo Geração de Documentos</a></li>
+    
+    </ol>
+
+</header>
+
+<body>
+    <div class="container">
+        <h1>Web Programa S. A. S. P. M.: Calculadora de Evolução Histórica de IPTU: Edificações:</h1>
+        <div class="inputs">
+            <label for="valorInicial">Valor Inicial do IPTU:</label>
+            <input type="number" id="valorInicial" required>
+            <label for="dataInicial">Ano Inicial:</label>
+            <input type="number" id="dataInicial" required>
+            <label for="valorFinal">Valor Final do IPTU:</label>
+            <input type="number" id="valorFinal" required>
+            <label for="dataFinal">Ano Final:</label>
+            <input type="number" id="dataFinal" required>
+            <button id="calcular">Calcular</button>
+            <button class="btn" onclick="limpar()">Limpar</button>
+            <button class="btn" onclick="novoCalculo()">Carregar para novo Cálculo</button>
+            <button onclick="window.print()">Imprimir</button>          </div>
+        <table id="resultado" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Ano</th>
+                    <th>Valor Corrigido</th>
+                    <th>Taxa Aplicada (%)</th> 
+                    <th>Observações</th>
+                    <th>Diferença (Corrigido - Final)</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        const taxas = {
+            1998: 0, 1999: 0, 2000: 0, 2001: 16.69, 2002: 11.04, 2003: 11,
+            2004: 9.92, 2005: 10, 2006: 5, 2007: 3.5, 2008: 4.12, 2009: 6.39,
+            2010: 0, 2011: 0, 2012: 0, 2013: 0, 2014: 0, 2015: 0, 2016: 13.07,
+            2017: 7.87, 2018: 7.99, 2019: 9.85, 2020: 7.82, 2021: 9.2, 
+            2022: 15.963, 2023: 11.76, 2024: 10.109, 2025: 10.048, 
+        };
+        
+        // Define a taxa de referência mínima para considerarmos uma correção aplicada
+        const taxaReferenciaMinima = 0.01; 
+
+        document.getElementById("calcular").addEventListener("click", function() {
+            const valorInicial = parseFloat(document.getElementById("valorInicial").value);
+            const anoInicial = parseInt(document.getElementById("dataInicial").value);
+            const valorFinal = parseFloat(document.getElementById("valorFinal").value);
+            const anoFinal = parseInt(document.getElementById("dataFinal").value);
+
+            const tbody = document.querySelector("#resultado tbody");
+            tbody.innerHTML = ""; // Limpar resultados anteriores
+            let valorCorrigido = valorInicial;
+            
+            // Validação básica
+            if (isNaN(valorInicial) || isNaN(anoInicial) || isNaN(valorFinal) || isNaN(anoFinal) || anoInicial > anoFinal) {
+                alert("Por favor, preencha todos os campos corretamente e garanta que o Ano Inicial seja menor ou igual ao Ano Final.");
+                return;
+            }
+
+            for (let ano = anoInicial; ano <= anoFinal; ano++) {
+                const taxa = taxas[ano] || 0;
+
+                // Corrigir o valor para o ano atual, exceto o ano inicial
+                if (ano !== anoInicial) {
+                    valorCorrigido *= (1 + taxa / 100);
+                    valorCorrigido = Math.round(valorCorrigido * 100) / 100;
+                }
+
+                const tr = document.createElement("tr");
+                
+                // Criar as células individuais
+                const ano_td = document.createElement("td");
+                const valorCorrigido_td = document.createElement("td");
+                const taxa_td = document.createElement("td"); 
+                const obs = document.createElement("td");
+                const diff = document.createElement("td");
+
+                // 1. ANO
+                ano_td.innerText = ano;
+                // 2. VALOR CORRIGIDO
+                valorCorrigido_td.innerText = `R$ ${valorCorrigido.toFixed(2)}`;
+                // 3. TAXA APLICADA
+                taxa_td.innerText = (ano === anoInicial) ? "-" : taxa.toFixed(3);
+                
+                // 4. OBSERVAÇÕES
+                if (ano === anoInicial) {
+                    obs.innerText = "Valor de partida (Inicial)";
+                    obs.style.color = "blue";
+                } else {
+                    if (taxa > taxaReferenciaMinima) {
+                        obs.innerText = `Correção aplicada (Taxa: ${taxa.toFixed(3)}%)`;
+                        obs.style.color = "green"; 
+                    } else if (taxa === 0) {
+                        obs.innerText = `Correção não aplicada (Taxa: ${taxa.toFixed(2)}%)`;
+                        obs.style.color = "red"; 
+                    } else {
+                        obs.innerText = `Correção atípica (Taxa: ${taxa.toFixed(3)}%)`;
+                        obs.style.color = "orange";
+                    }
+                }
+                
+                // 5. DIFERENÇA (Corrigido - Final)
+                diff.innerText = "-";
+                if (ano === anoFinal) {
+                    const diferenca = valorCorrigido - valorFinal;
+                    
+                    if (diferenca < 0) {
+                        obs.innerText = "Valor final abaixo do esperado!";
+                        obs.style.color = "orange";
+                        diff.innerText = `- R$ ${Math.abs(diferenca).toFixed(2)}`;
+                        diff.style.color = "red";
+                        diff.style.fontWeight = "bold";
+
+                    } else if (diferenca > 0) {
+                        obs.innerText = "Valor final acima do esperado!";
+                        obs.style.color = "red";
+                        diff.innerText = `+ R$ ${diferenca.toFixed(2)}`;
+                        diff.style.color = "green";
+                        diff.style.fontWeight = "bold";
+
+                    } else {
+                        obs.innerText = "Valor final dentro do esperado!";
+                        obs.style.color = "green";
+                        diff.innerText = "R$ 0.00";
+                    }
+                }
+                
+                // INSERÇÃO CORRETA DOS ELEMENTOS NA LINHA (TR) - CORREÇÃO DE ORDEM
+                tr.appendChild(ano_td);
+                tr.appendChild(valorCorrigido_td);
+                tr.appendChild(taxa_td); // 3ª Coluna
+                tr.appendChild(obs);     // 4ª Coluna
+                tr.appendChild(diff);    // 5ª Coluna
+                tbody.appendChild(tr);
+            }
+
+            document.getElementById("resultado").style.display = "table";
+        });
+
+        function limpar() {
+            document.getElementById("valorInicial").value = '';
+            document.getElementById("dataInicial").value = '';
+            document.getElementById("valorFinal").value = '';
+            document.getElementById("dataFinal").value = '';
+            document.querySelector("#resultado tbody").innerHTML = "";
+            document.getElementById("resultado").style.display = "none";
+        }
+
+        function novoCalculo() {
+            window.location.reload(); 
+        }
+    </script>
+
+    <footer>         © 2025 Web Programa Sistema de Apoio a Servidores Públicos Municipais (S. A. S. P. M.). Todos os direitos reservados a Juliano <img src="https://d1yei2z3i6k35z.cloudfront.net/6946809/65e45ac72773e_zanoni.1.png" alt="Logo de Juliano Zanoni">
+    </footer>
+</body>
+</html>

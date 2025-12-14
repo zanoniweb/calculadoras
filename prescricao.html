@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB PROGRAMA SISTEMA DE APOIO A SERVIDORES PÚBLICOS MUNICIPAIS (S. A. S. P. M.): Formulário de Prescrição</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+       
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    header {
+        width: 100%;
+    }
+
+    ol {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        list-style-type: none;
+        font-family: Geneva;
+        background-color: black;
+        padding: 10px;
+    }
+
+    li {
+        margin: 5px;
+    }
+
+    a {
+        font-family: Geneva;
+        font-size: 18px;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    a:hover {
+        color: blue;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    a:active {
+        color: red;
+    }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 768px) {
+        ol {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        a {
+            display: block;
+            width: 90%;
+            font-size: 20px;
+        }
+    }
+
+    /* Final da Responsividade para telas menores */
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 2px solid #000;
+            background: #fff;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .logo {
+            width: 200px; /* Aumentado o tamanho da logo */
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        h2, h3 {
+            text-align: center; /* INICIO DO CÓDIGO DA ESTILIZAÇÃO DO FORMULÁRIO E DA TABELA */
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+        }
+
+         /* Estilo para os campos de entrada transparentes */
+
+         #campo {
+            width: 35ch; /* Largura baseada na largura do caractere '0' */
+            padding: 5px;
+            border: 2px solid rgba(0, 0, 0, 0); /* Borda transparente */
+            transition: width 0.3s ease; /* Animação suave */
+        }
+
+        /* Centraliza o campo de assinatura */
+        .assinatura {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .assinatura input {
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        th {
+            width: 25%; /* Ajuste a largura da coluna para 25%, por exemplo */
+            padding: 5px;
+            text-align: left;
+            border: 1px solid black;
+        }
+
+        td {
+            width: 75%; /* Ajuste a largura da coluna para o restante, 75% */
+            padding: 5px;
+            text-align: left;
+            border: 1px solid black;
+        }
+
+        input {
+            width: 340px; /* Largura inicial */
+            border-radius: 0; /* Borda retangular (sem arredondamento) */
+            border: 2px solid transparent; /* Borda transparente */
+            text-align: center;
+            font-size: 13px;
+        }
+
+
+        .tabela-contribuinte colgroup col:nth-child(1) {
+            width: 50%;
+        }
+
+        .tabela-contribuinte colgroup col:nth-child(2) {
+            width: 50%;
+        }
+
+        button {
+            margin: 5px;  /* INICIO DO CÓDIGO DA ESTILIZAÇÃO DOS BOTÕES */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4cae4c; /* FINAL DO CÓDIGO DA ESTILIZAÇÃO DOS BOTÕES */
+        }
+
+        #menu {
+            background: #333; /* CODIGO PARA NÃO APRESENTAR MENU NA CRIAÇÃO DO ARQUIVO EM PDF */
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #quadro-container {
+            display: block;
+            border: 1px solid black;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+      /* ----------------------------------- */
+/* ESTILIZAÇÃO PARA O MENU DE NAVEGAÇÃO (LI/A/I) */
+/* ----------------------------------- */
+
+/* 1. Estilização base do container do menu (Assumindo que sua lista tem a classe 'menu-lista') */
+/* Se sua lista não tiver classe, use o seletor mais específico, por exemplo, .navbar-nav li */
+.menu-lista li a {
+    display: flex;       /* Permite alinhar o ícone e o texto */
+    align-items: center; /* Alinha verticalmente no centro */
+    padding: 8px 15px;
+    text-decoration: none;
+    color: #343a40;      /* Cor escura padrão para o texto */
+    transition: background-color 0.3s, color 0.3s;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.menu-lista li a:hover {
+    background-color: #e9ecef; /* Fundo cinza claro ao passar o mouse */
+    color: #007bff;            /* Cor primária do Bootstrap ao passar o mouse */
+}
+
+/* 2. Estilização dos Ícones (i.fas) */
+.menu-lista li a i.fas {
+    /* Define o tamanho e a margem do ícone para separá-lo do texto */
+    width: 25px;         /* Largura fixa para manter o alinhamento vertical dos textos */
+    text-align: center;
+    margin-right: 10px;  /* Espaço entre o ícone e o texto */
+    color: #007bff;      /* Cor primária do ícone */
+    font-size: 1.1rem;
+}
+
+/* 3. Estilização específica para o item 'Sair' (Destaque Vermelho) */
+.menu-lista li:first-child a { /* Seleciona o primeiro item (Sair) */
+    font-weight: bold;
+}
+
+.menu-lista li:first-child a i.fas {
+    color: #dc3545; /* Cor vermelha de alerta (danger do Bootstrap) */
+}
+
+/* Opcional: Efeito hover especial para o Sair */
+.menu-lista li:first-child a:hover {
+    background-color: #dc3545;
+    color: #fff; /* Texto branco no hover */
+}
+.menu-lista li:first-child a:hover i.fas {
+    color: #fff; /* Ícone branco no hover no hover */
+}
+    </style>
+
+</head>
+
+<div id="menu">
+
+<header>
+    <ol>
+
+        <li><a href="index.html"><i class="fas fa-sign-out-alt"></i></i>Sair</a></li>
+        <li><a href="calculadoraareas.html"><i class="fas fa-ruler-combined"></i> Calculadora Áreas: Edificadas</a></li>
+        <li><a href="calculadoradiferencadatas.html"><i class="fas fa-calendar-alt"></i> Calculadora Diferença: Datas</a></li>
+        <li><a href="calculadorahistoricaiptu.html"><i class="fas fa-chart-line"></i> Calculadora Evolução Histórica IPTU (1)</a></li>
+        <li><a href="calculadorahistoricaiptudois.html"><i class="fas fa-chart-line"></i> Calculadora Evolução Histórica IPTU (2)</a></li>
+        <li><a href="calculadorasaldo.html"><i class="fas fa-balance-scale"></i> Calculadora Saldos: IPTU</a></li>
+        <li><a href="calculadoravalorpercentual.html"><i class="fas fa-percentage"></i> Calculadora Variação de Valor e Percentual: IPTU</a></li>
+        <li><a href="micromanual.html"><i class="fas fa-book-open"></i> Micro Manual</a></li>
+        <li><a href="mapatecnicotres.html"><i class="fas fa-map-marked-alt"></i> Mapas Temáticos</a></li>
+        <li><a href="projetospendentes.html"><i class="fas fa-clipboard-list"></i> Projetos Pendentes Edificações</a></li>
+        <li><a href="geracaodocumentosservidores.html"><i class="fas fa-chevron-left"></i>Voltar ao Módulo Geração de Documentos</a></li>
+
+    </ol>
+</header>
+</div>
+
+
+
+<body>
+
+    <div class="container" id="formulario">
+        <div class="header">
+            <img src="https://www.cambe.pr.gov.br/wp-content/uploads/2021/02/Brasao_Prefeitura_21-24_transp-e1628080573185.png" class="logo" alt="Logo">
+            <h2>Prefeitura Municipal de Cambé</h2>
+            <h3>Secretaria Municipal de Fazenda</h3>
+        </div>
+
+        <h3>EXCLUSIVO PARA PRESCRIÇÃO</h3>
+
+        <div id="quadro-container">
+            <p>Aqui aparecerá o protocolo.</p>
+        </div>
+        
+
+    <div class="form-group">
+        <label for="revisao_select">Selecione uma opção:</label>
+        <select id="revisao_select">
+            <option value="" disabled selected>Escolha uma opção</option>
+            <option value="revisao">Revisão de Parcelamento para Prescrição</option>
+            <option value="prescricao">Prescrição</option>
+        </select>
+    </div>
+
+    <center>
+ <table class="tabela-contribuinte">
+
+    <colgroup>
+        <col style="width: 30%;">
+        <col style="width: 70%;">
+  
+            <tr>
+                <th>Contribuinte</th>
+                <td><input type="text" id="contribuinte" maxlength="50" placeholder="Nome Completo (sem abreviação)"</td>
+            </tr>
+            <tr>
+                <th>E-mail</th>
+                <td><input type="email" id="email_contribuinte"></td>
+            </tr>
+
+            <tr>
+                <th>Inscrição Imobiliária</th>
+                <td><input type="text" id="inscricao" maxlength="19" placeholder="Digite a inscrição" oninput="formatarInscricao()"></td>
+            </tr>
+            
+            <tr>
+                <th>Endereço</th>
+                <td><input type="text" id="endereco"  maxlength="50"></td>
+            </tr>
+            <tr>
+                <th>Bairro</th>
+                <td><input type="text" id="bairro"></td>
+            </tr>
+            <tr>
+            <th>CPF</th>
+                <td>   
+               <div class="form-group">
+                <input type="text" id="cpf_proprietario" maxlength="14" placeholder="000.000.000-00">
+               </div>          
+                </td>
+            </tr>
+
+            <tr>
+                <th>Quadra</th>
+                <td><input type="text" id="quadra"></td>
+            </tr>
+
+            <tr>
+                <th>Lote</th>
+                <td><input type="text" id="Lote"></td>
+            </tr>
+
+            <tr>
+                <th>Complemento</th>
+                <td><input type="text" id="complemento"  maxlength="50"></td>
+            </tr>
+
+            <tr>
+                <th>RG</th>
+                <td><input type="text" id="rg"></td>
+            </tr>
+
+            <tr>
+                <th>Telefones</th>
+                <td><input type="text" id="telefones"></td>
+            </tr>
+
+        </table>
+
+
+        <div id="tabelaRequerenteContainer">
+
+        <h3>Requerente</h3>
+        <table>
+            <tr>
+                <th>Nome</th>
+                <td><input type="text" id="requerente" maxlength="50" placeholder="Nome Completo (sem abreviação)"></td>
+            </tr>
+            <tr>
+                <th>E-mail</th>
+                <td><input type="email" id="email_requerente"></td>
+            </tr>
+            <tr>
+                <th>Vínculo Proprietário</th>
+                <td><input type="text" id="vinculo"></td>
+            </tr>
+            <tr>
+                <th>Endereço</th>
+                <td><input type="text" id="endereco_requerente"  maxlength="50"></td>
+            </tr>
+            <tr>
+                <th>Complemento</th>
+                <td><input type="text" id="complemento"  maxlength="50"></td>
+            </tr>
+            <tr>
+                <th>Bairro</th>
+                <td><input type="text" id="bairro_requerente"></td>
+            </tr>
+            <tr>
+                <th>CPF</th>
+                <td> 
+                <div class="form-group">
+                    <input type="text" id="cpf_possuidor" maxlength="14" placeholder="000.000.000-00">
+                </div>          
+                </td>
+            </tr>
+            <tr>
+                <th>RG</th>
+                <td><input type="text" id="rg_requerente"></td>
+            </tr>
+
+            <tr>
+                <th>Telefones</th>
+                <td><input type="text" id="telefones"></td>
+            </tr>
+
+        </table>
+
+    </colgroup>
+
+        </div>
+        
+    </center>
+
+        <p>Senhor, Secretário:</p>
+        
+        <div class="documento">
+            <p><b>RECONHECIMENTO DE PRESCRIÇÃO DOS DÉBITOS TRIBUTÁRIOS</b> - Tendo em vista o extrato de débitos emitido, no expediente de <center><input type="text" id="data_do_extrato" placeholder="Data do Extrato"></center>, em 2 (duas) vias de igual teor e forma a que se referem os, tomando conhecimento do montante da dívida no valor de <center><input type="text" id="valor_do_extrato" placeholder="Valor do Extrato"></center>
+                e do período ali mencionado, com atualização dos débitos até a presente data, na qualidade de representante legal do proprietário do imóvel ou da empresa proprietária do imóvel aqui identificado ou proprietário do mesmo, requer o reconhecimento de prescrição dos débitos tributários referente ao(s) exercício(s) ou contrato <br> 
+                <center><input type="text" id="anos_prescritos" placeholder="Anos Prescritos" maxlength="100" size="100"></center>, <br>
+                bem assim o cancelamento/extinção do crédito tributário, em prazo superior a 5 (cinco) anos no cadastro imobiliário.
+            </p>
+            
+            <p>Nestes Termos,<br>Pede Deferimento,</p>
+            
+            <div class="assinatura">
+            
+                <input type="text" id="nome_requerente" placeholder="Nome do Requerente (sem abreveaturas)" maxlength="100" size="100">
+            
+                <br>(assinatura por extenso)
+
+            </div>
+
+            <br>
+
+            <center>
+            <b>    
+            <p>NÃO SERÁ DADO ANDAMENTO NESTE PROTOCOLO SE NÃO TIVER 1 CÓPIA DA MATRÍCULA ATUALIZADA, 1 CÓPIA DO CONTRATO DE COMPRA E VENDA (Se for o responsável ou possuidor), 1 CÓPIA DO RG E CPF (do contribuinte e requerente), 2 VIAS DO EXTRATO DE DÉBITOS, CERTIDÃO DE CASAMENTO, DE ÓBITO (SE FOR O CASO), PROCURAÇÃO E OUTROS QUE SE FIZEREM NECESSÁRIOS.</p>
+            </b>
+            </center>
+
+           <br>
+           <input type="text" id="data_e_horario_do_atendimento" placeholder="Data e Horário do Atendimento"></p>
+           </div>
+
+        </div>
+
+<!--COMEÇO DO CÓDIGO DE BOTÕES-->
+
+        <center>
+
+        <button class="btn" onclick="novoCalculo()">Carregar para novo preenchimento.</button>
+        <button id="noprint" onclick="gerarPDF()">Salvar PDF</button>
+        <button onclick="toggleTabelaRequerente()">Ocultar/Exibir Tabela do Requerente</button>
+
+        </center>
+
+<!--FINAL DO CÓDIGO DE BOTÕES-->
+
+    <script>
+
+        // Preencher automaticamente a data e horário do atendimento
+        const now = new Date();
+        const data_e_horario_formatado = now.toLocaleDateString() + ', ' + now.toLocaleTimeString();
+        document.getElementById('data_e_horario_do_atendimento').value = data_e_horario_formatado;
+
+        function formatarInscricao() {
+            const input = document.getElementById('inscricao');
+            let valor = input.value;
+
+            // Remove qualquer caractere que não seja número
+            valor = valor.replace(/\D/g, '');
+
+            // Aplica a máscara XX.XXX.XXX.XXXX.XXX
+            if (valor.length > 2) valor = valor.replace(/^(\d{2})(\d)/, '$1.$2');
+            if (valor.length > 6) valor = valor.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+            if (valor.length > 9) valor = valor.replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3.$4');
+            if (valor.length > 13) valor = valor.replace(/^(\d{2})\.(\d{3})\.(\d{3})\.(\d{4})(\d)/, '$1.$2.$3.$4.$5');
+            
+            // Atualiza o valor do campo de entrada
+            input.value = valor;
+        }
+
+        // CÓDIGO JAVASCRIPT PARA CPF COM PONTO E TRAÇO
+        function formatCPF(input) {
+        let value = input.value;
+
+        // Remover todos os caracteres que não são números
+        value = value.replace(/\D/g, '');
+
+        // Aplicar a formatação conforme o usuário digita
+        if (value.length > 3 && value.length <= 6) {
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        } else if (value.length > 6 && value.length <= 9) {
+            value = value.replace(/(\d{3})(\d{3})(\d)/, '$1.$2.$3');
+        } else if (value.length > 9) {
+            value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+        }
+
+        // Atualizar o campo de entrada
+        input.value = value;
+    }
+
+    // Adicionar o evento para os dois campos
+    document.getElementById('cpf_proprietario').addEventListener('input', function () {
+        formatCPF(this);
+    });
+
+    document.getElementById('cpf_possuidor').addEventListener('input', function () {
+        formatCPF(this);
+    });
+
+    function gerarPDF() {
+    const { jsPDF } = window.jspdf;
+    let form = document.getElementById("formulario");
+    let botoes = document.getElementById("noprint");
+
+    // Esconde os botões
+    botoes.style.display = "none";
+
+    html2canvas(form).then(canvas => {
+        let imgData = canvas.toDataURL("image/png");
+
+        // Define o tamanho do PDF como A4 (largura = 21cm, altura = 29.7cm)
+        let pdf = new jsPDF({ unit: 'cm', format: 'a4' });
+
+        let pageWidth = pdf.internal.pageSize.getWidth(); // Largura da página A4 (21 cm)
+        let imgWidth = 18; // Largura da imagem no PDF (ajustável conforme necessário)
+        let xPosition = (pageWidth - imgWidth) / 2; // Calcula a posição centralizada
+
+        pdf.addImage(imgData, "PNG", xPosition, 0, imgWidth, 28);
+        pdf.save("formulario.pdf");
+
+        // Exibe os botões novamente
+        botoes.style.display = "block";
+    });
+}
+
+        function novoCalculo() {     window.location.href = 'prescricao.html'; }
+
+
+         // FUNÇÃO PARA OCULTAR A TABELA DO REQUERENTE
+        function toggleTabelaRequerente() {
+            var container = document.getElementById('tabelaRequerenteContainer');
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+          // FUNÇÃO PARA POSTAR O QUADRO DE PROTOCOLO
+          document.addEventListener("DOMContentLoaded", function() {
+    let quadroContainer = document.getElementById("quadro-container");
+    
+    if (quadroContainer) {
+        quadroContainer.innerHTML = `
+            <table border="1">
+                <tr>
+                PREFEITURA MUNICIPAL DE CAMBÉ
+                </tr>
+<br>
+                <tr>
+                INÍCIO PROTOCOLO: DEPARTAMENTO DE RECEITAS IMOBILIÁRIAS
+                </tr>
+<br>
+                 <tr>
+                PROTOCOLO: _________________/20____
+                </tr>
+<br>
+                <tr>
+                EM: _____/________/20____
+<br>
+                <tr>
+                PROTOCOLISTA   
+                </tr>
+<br>
+                <tr>
+                FONE:___________________________    
+                </tr>      
+            </table>
+        `;
+    }
+});
+
+    </script>
+
+<center>
+    <i>    
+    <footer>
+    
+   © 2025 Web Programa Sistema de Apoio a Servidores Públicos Municipais (S. A. S. P. M.). Todos os direitos reservados a Juliano <img src="https://d1yei2z3i6k35z.cloudfront.net/6946809/65e45ac72773e_zanoni.1.png" alt="Logo de Juliano Zanoni">
+    
+    </footer>
+    </i>
+</center>
+
+
+</body>
+</html>

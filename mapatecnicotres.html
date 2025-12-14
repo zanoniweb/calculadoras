@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Programa Sistema de Apoio a Servidores Públicos Municipais (S. A. S. P. M.): Editor de Mapas Urbanos</title>
+    
+<style>
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    background-color: #0057b7;
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.main-container {
+    display: flex;
+    flex-grow: 1;
+    padding: 2rem;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.sidebar {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 250px;
+}
+
+.toolbar-section h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #0057b7;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+}
+
+.tool-input, .tool-select {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.action-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #0057b7;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.action-button:hover {
+    background-color: #003d82;
+    transform: translateY(-2px);
+}
+
+.canvas-section {
+    flex-grow: 1;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.canvas-container {
+    position: relative;
+}
+
+canvas {
+    border: 1px solid #ccc;
+    cursor: crosshair;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.compass {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border: 2px solid #333;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.direction {
+    position: absolute;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: #333;
+}
+
+.north { top: -15px; }
+.northeast { top: -8px; right: -8px; transform: rotate(45deg); }
+.east { right: -15px; }
+.southeast { bottom: -8px; right: -8px; transform: rotate(135deg); }
+.south { bottom: -15px; }
+.southwest { bottom: -8px; left: -8px; transform: rotate(-135deg); }
+.west { left: -15px; }
+.northwest { top: -8px; left: -8px; transform: rotate(-45deg); }
+
+.footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #333;
+    color: white;
+    margin-top: auto;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .sidebar {
+        min-width: auto;
+        padding: 1rem;
+    }
+}
+/* Estilos para telas grandes (desktops) - acima de 1200px */
+@media (min-width: 1200px) {
+    .main-container {
+        padding: 3rem;
+        gap: 3rem;
+    }
+
+    .sidebar {
+        min-width: 300px;
+    }
+}
+
+/* Estilos para telas médias (tablets) - 769px a 1199px */
+@media (min-width: 769px) and (max-width: 1199px) {
+    .main-container {
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
+
+    .sidebar {
+        min-width: 220px;
+    }
+}
+
+/* Estilos para telas pequenas (smartphones) - 481px a 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-width: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .toolbar-section, .actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+}
+
+
+/* estilo básico do header */
+header {
+  background-color: #2c3e50;   /* cor de fundo */
+  padding: 10px 20px;
+}
+
+/* lista de navegação */
+.nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;              /* itens lado a lado */
+  justify-content: flex-end;  /* botão "Sair" à direita */
+}
+
+/* item da lista */
+.nav-item {
+  margin-left: 15px;
+}
+
+/* link */
+.nav-link {
+  text-decoration: none;
+  color: #ecf0f1;             /* cor clara */
+  font-weight: bold;
+  padding: 8px 15px;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+/* efeito hover */
+.nav-link:hover {
+  background-color: #34495e;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;   /* empilha os itens */
+    align-items: flex-start;  /* alinha à esquerda */
+  }
+
+  .nav-item {
+    margin: 10px 0;
+  }
+
+  .nav-link {
+    display: block;
+    width: 100%;              /* ocupa toda a largura */
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 5px 10px;
+  }
+
+  .nav-link {
+    font-size: 14px;          /* texto menor em telas pequenas */
+    padding: 6px 10px;
+  }
+}
+
+
+</style>
+
+</head>
+
+<div>
+<header>
+
+<li class="nav-item">
+
+<a class="nav-link" href="geracaodocumentosservidores.html">Volatar a Geração de Doumentos (S. A. S. P. M.) |</a>
+    
+<a class="nav-link" href="index.html">Sair</a>
+
+</li>
+
+</header>
+</div>
+
+<body>
+
+    <header class="header">
+        <h1>Web Programa Sistema de Apoio a Servidores Públicos Municipais (S. A. S. P. M.): Editor de Mapas Urbanos</h1>
+
+        
+
+    </header>
+
+    <main class="main-container">
+        <aside class="sidebar">
+            <div class="toolbar-section">
+                <h3>Ferramentas</h3>
+                <div class="tool-options">
+                    <input type="color" id="colorPicker" value="#0057b7" class="tool-input">
+                    <select id="toolSelector" class="tool-select">
+                        <option value="pencil">Lápis</option>
+                        <option value="eraser">Borracha</option>
+                        <option value="line">Linha</option>
+                        <option value="circle">Círculo</option>
+                        <option value="rectangle">Retângulo</option>
+                        <option value="triangle">Triângulo</option>
+                        <option value="text">Texto</option>
+                    </select>
+                    <input type="range" id="brushSize" min="1" max="20" value="3" class="tool-input">
+                    <input type="range" id="textSize" min="10" max="100" value="24" class="tool-input">
+                    
+                    <select id="textDirectionSelector" class="tool-select">
+                        <option value="horizontal">Horizontal</option>
+                        <option value="vertical">Vertical</option>
+                    </select>
+                    </div>
+            </div>
+
+            <div class="toolbar-section">
+                <h3>Edificações</h3>
+                <select id="edificacaoSelector" class="tool-select">
+                    <option value="" disabled selected>Selecione uma edificação</option>
+                    <option value="postoSaude">Posto de Saúde</option>
+                    <option value="hospital">Hospital</option>
+                    <option value="escolaPublica">Escola Pública</option>
+                    <option value="rodoviaria">Rodoviária</option>
+                    <option value="edificacaoPublica">Edificação Pública</option>
+                    <option value="cemiterio">Cemitério</option>
+                    <option value="aeroporto">Aeroporto</option>
+                    <option value="igreja">Igreja</option>
+                    <option value="parque">Parque</option>
+                    <option value="supermercado">Supermercado</option>
+                    <option value="restaurante">Restaurante</option>
+                    <option value="bombeiros">Corpo de Bombeiros</option>
+                    <option value="policia">Delegacia de Polícia</option>
+                    <option value="praca">Praça</option>
+                    <option value="correio">Agência de Correios</option>
+                    <option value="banco">Banco</option>
+                    <option value="biblioteca">Biblioteca</option>
+                    <option value="museu">Museu</option>
+                    <option value="teatro">Teatro</option>
+                    <option value="estadio">Estádio</option>
+                    <option value="fabrica">Fábrica</option>
+                    <option value="comercio">Comércio Local</option>
+                    <option value="condominio">Condomínio Residencial</option>
+                    <option value="pontoOnibus">Ponto de Ônibus</option>
+                    <option value="estacaoTrem">Estação de Trem/Metrô</option>
+                    <option value="fazenda">Fazenda</option>
+                    <option value="silo">Silo</option>
+                    <option value="curral">Curral</option>
+                    <option value="celeiro">Celeiro</option>
+                    <option value="laticinio">Laticínio</option>
+                    <option value="postoGasolina">Posto de Gasolina</option>
+                    <option value="usinaEnergia">Usina de Energia</option>
+                    <option value="torreTelecom">Torre de Telecomunicações</option>
+                    <option value="centroComunitario">Centro Comunitário</option>
+                    <option value="postoSaudeRural">Posto de Saúde Rural</option>
+                    <option value="escolaRural">Escola Rural</option>
+                </select>
+            </div>
+
+            <div class="toolbar-section actions">
+                <h3>Ações</h3>
+                <button onclick="undo()" class="action-button">Desfazer</button>
+                <button onclick="redo()" class="action-button">Refazer</button>
+                <button onclick="clearCanvas()" class="action-button">Limpar</button>
+                <button onclick="saveImage()" class="action-button">Salvar Imagem</button>
+                <button onclick="savePDF()" class="action-button">Salvar PDF</button>
+                <button onclick="printCanvas()" class="action-button">Imprimir</button>
+            </div>
+        </aside>
+
+        <section class="canvas-section">
+            <div id="container" class="canvas-container">
+                <canvas id="mapCanvas" width="900" height="650"></canvas>
+                <div class="compass">
+                    <div class="direction north">N</div>
+                    <div class="direction northeast">NE</div>
+                    <div class="direction east">E</div>
+                    <div class="direction southeast">SE</div>
+                    <div class="direction south">S</div>
+                    <div class="direction southwest">SO</div>
+                    <div class="direction west">O</div>
+                    <div class="direction northwest">NO</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+    <i>
+        © 2025 Web Programa Sistema de Apoio a Servidores Públicos Municipais (S. A. S. P. M.). Todos os direitos reservados a Juliano <img src="https://d1yei2z3i6k35z.cloudfront.net/6946809/65e45ac72773e_zanoni.1.png" alt="Logo de Juliano Zanoni">
+    </i>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script>
+
+// editor.js
+
+const canvas = document.getElementById('mapCanvas');
+const ctx = canvas.getContext('2d');
+
+const colorPicker = document.getElementById('colorPicker');
+const toolSelector = document.getElementById('toolSelector');
+const brushSize = document.getElementById('brushSize');
+const textSize = document.getElementById('textSize');
+const edificacaoSelector = document.getElementById('edificacaoSelector');
+const textDirectionSelector = document.getElementById('textDirectionSelector');
+
+let isDrawing = false;
+let currentTool = 'pencil';
+let lastX = 0;
+let lastY = 0;
+
+// Histórico para Desfazer/Refazer
+let history = [];
+let historyIndex = -1;
+
+// Mapeamento de edificações para cores e, opcionalmente, formas padrão
+const edificacoesMap = {
+    'postoSaude': { color: '#00cc00', shape: 'cross' }, 
+    'hospital': { color: '#008000', shape: 'h_symbol' }, 
+    'escolaPublica': { color: '#ffcc00', shape: 'hat' }, 
+    'rodoviaria': { color: '#9933ff', shape: 'bus_station' }, 
+    'edificacaoPublica': { color: '#6666ff', shape: 'square' }, 
+    'cemiterio': { color: '#666666', shape: 'cross_grave' }, 
+    'aeroporto': { color: '#0000ff', shape: 'plane' }, 
+    'igreja': { color: '#9900cc', shape: 'church' }, 
+    'parque': { color: '#33cc33', shape: 'tree' }, 
+    'supermercado': { color: '#ff6600', shape: 'cart' }, 
+    'restaurante': { color: '#ff3366', shape: 'cutlery' }, 
+    'bombeiros': { color: '#ff0000', shape: 'fire_truck' }, 
+    'policia': { color: '#000099', shape: 'shield' }, 
+    'praca': { color: '#66ff66', shape: 'bench' }, 
+    'correio': { color: '#a0522d', shape: 'envelope' }, 
+    'banco': { color: '#ffd700', shape: 'dollar_sign' }, 
+    'biblioteca': { color: '#4b0082', shape: 'book' }, 
+    'museu': { color: '#8b0000', shape: 'column' }, 
+    'teatro': { color: '#800080', shape: 'mask' }, 
+    'estadio': { color: '#008080', shape: 'oval' }, 
+    'fabrica': { color: '#483d8b', shape: 'factory' }, 
+    'comercio': { color: '#db7093', shape: 'store' }, 
+    'condominio': { color: '#a9a9a9', shape: 'buildings' }, 
+    'pontoOnibus': { color: '#000000', shape: 'bus_stop_sign' }, 
+    'estacaoTrem': { color: '#4b0082', shape: 'train' }, 
+    'fazenda': { color: '#8b4513', shape: 'farmhouse' }, 
+    'silo': { color: '#778899', shape: 'silo_shape' }, 
+    'curral': { color: '#8b4513', shape: 'fences' }, 
+    'celeiro': { color: '#b22222', shape: 'barn' }, 
+    'laticinio': { color: '#f0e68c', shape: 'milk_bottle' }, 
+    'postoGasolina': { color: '#2f4f4f', shape: 'gas_pump' }, 
+    'usinaEnergia': { color: '#20b2aa', shape: 'power_plant' }, 
+    'torreTelecom': { color: '#708090', shape: 'telecom_tower' }, 
+    'centroComunitario': { color: '#4682b4', shape: 'community_center' }, 
+    'postoSaudeRural': { color: '#228b22', shape: 'cross_rural' }, 
+    'escolaRural': { color: '#daa520', shape: 'school_house' }
+};
+
+// Salva o estado atual do canvas
+function saveState() {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    history = history.slice(0, historyIndex + 1);
+    history.push(imageData);
+    historyIndex++;
+}
+
+// Restaura o estado salvo
+function restoreState() {
+    if (historyIndex >= 0 && historyIndex < history.length) {
+        ctx.putImageData(history[historyIndex], 0, 0);
+    }
+}
+
+// =======================================================
+// CORREÇÃO: Lógica do Mouse (Nenhuma alteração aqui)
+// =======================================================
+
+// Event Listeners
+canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+
+    // --- 1. Ações de Desenho de Ponto Único (Textos e Edificações) ---
+    if (currentTool === 'text') {
+        const textInput = prompt('Digite o texto:');
+        if (textInput !== null) {
+            drawText(textInput, lastX, lastY);
+            saveState(); // Salva o estado imediatamente após o desenho
+        }
+        isDrawing = false; // Desativa o desenho, pois é uma ação de clique
+        return; 
+        
+    } else if (currentTool === 'edificacao') {
+        const selectedEdificacao = edificacaoSelector.value;
+        if (selectedEdificacao) {
+            drawEdificacao(selectedEdificacao, lastX, lastY);
+            saveState(); // Salva o estado imediatamente após o desenho
+        }
+        isDrawing = false; // Desativa o desenho
+        return;
+    } 
+    
+    // --- 2. Ações de Desenho Contínuo (Lápis/Borracha e Formas) ---
+    else {
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        
+        // Se for uma forma de clique e arrasto (Linha, Círculo, etc.), 
+        // salve o estado antes de começar a desenhar sobre ele.
+        if (currentTool !== 'pencil' && currentTool !== 'eraser') {
+            saveState(); 
+        }
+    }
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    if (!isDrawing) return;
+    
+    if (currentTool === 'pencil' || currentTool === 'eraser') {
+        drawLine(e.offsetX, e.offsetY);
+    } else if (currentTool === 'line' || currentTool === 'circle' || currentTool === 'rectangle' || currentTool === 'triangle') {
+        // Para visualização temporária das formas enquanto arrasta (opcional, mas recomendado)
+        // Isso restaura a imagem anterior e redesenha a forma no ponto atual, dando feedback.
+        restoreState(); 
+        drawShape(e.offsetX, e.offsetY, true); // O 'true' indica desenho temporário (sem salvar)
+    }
+});
+
+canvas.addEventListener('mouseup', (e) => {
+    if (isDrawing) {
+        if (currentTool === 'line' || currentTool === 'circle' || currentTool === 'rectangle' || currentTool === 'triangle') {
+            drawShape(e.offsetX, e.offsetY); // Desenha a forma final
+            saveState(); // Salva o estado da forma final
+        } 
+        else if (currentTool === 'pencil' || currentTool === 'eraser') {
+            saveState(); // Salva o estado do lápis/borracha
+        }
+    }
+    isDrawing = false;
+});
+
+canvas.addEventListener('mouseout', () => {
+    if (isDrawing && (currentTool === 'pencil' || currentTool === 'eraser')) {
+        saveState();
+    }
+    isDrawing = false;
+});
+
+toolSelector.addEventListener('change', (e) => {
+    currentTool = e.target.value;
+    canvas.style.cursor = 'crosshair'; 
+});
+
+edificacaoSelector.addEventListener('change', (e) => {
+    currentTool = 'edificacao';
+    canvas.style.cursor = 'copy'; 
+});
+
+
+// Funções de desenho
+function drawLine(x, y) {
+    ctx.strokeStyle = currentTool === 'eraser' ? '#ffffff' : colorPicker.value;
+    ctx.lineWidth = brushSize.value;
+    ctx.lineCap = 'round';
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+}
+
+function drawText(text, x, y) {
+    ctx.save();
+    
+    ctx.fillStyle = colorPicker.value;
+    ctx.font = `${textSize.value}px Arial`;
+
+    const textDirection = textDirectionSelector.value;
+    if (textDirection === 'vertical') {
+        ctx.translate(x, y);
+        ctx.rotate(Math.PI / 2);
+        ctx.fillText(text, 0, 0);
+    } else {
+        ctx.fillText(text, x, y);
+    }
+    
+    ctx.restore();
+}
+
+// =======================================================
+// AJUSTE: Função para desenhar Formas Geométricas
+// O fillStyle foi alterado para 'white' para as formas preenchidas.
+// =======================================================
+function drawShape(x, y, isTemporary = false) {
+    // Se for um desenho final (isTemporary=false), restauramos para garantir 
+    // que o desenho temporário do mousemove não fique.
+    if (!isTemporary) {
+        restoreState(); 
+    }
+    
+    // Define a cor da BORDA (stroke) com base no Color Picker
+    ctx.strokeStyle = colorPicker.value;
+    // Define a cor do PREENCHIMENTO (fill) como BRANCO
+    ctx.fillStyle = '#ffffff'; 
+    ctx.lineWidth = brushSize.value;
+    
+    const startX = lastX;
+    const startY = lastY;
+    const width = x - startX;
+    const height = y - startY;
+
+    ctx.beginPath();
+
+    switch (currentTool) {
+        case 'line':
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            break;
+        case 'rectangle':
+            // Preenche e depois desenha a borda
+            ctx.fillRect(startX, startY, width, height); 
+            ctx.strokeRect(startX, startY, width, height);
+            break;
+        case 'circle':
+            const radius = Math.sqrt(width * width + height * height) / 2;
+            const centerX = startX + width / 2;
+            const centerY = startY + height / 2;
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            // Preenche e depois desenha a borda
+            ctx.fill();
+            ctx.stroke();
+            break;
+        case 'triangle':
+            ctx.moveTo(startX, startY + height); // Canto inferior esquerdo
+            ctx.lineTo(startX + width / 2, startY); // Canto superior central
+            ctx.lineTo(startX + width, startY + height); // Canto inferior direito
+            ctx.closePath();
+            // Preenche e depois desenha a borda
+            ctx.fill();
+            ctx.stroke();
+            break;
+    }
+}
+
+
+function drawEdificacao(type, x, y) {
+    const edificacao = edificacoesMap[type];
+    if (!edificacao) return;
+
+    ctx.fillStyle = edificacao.color;
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 1;
+
+    const size = 25; 
+    const halfSize = size / 2;
+
+    ctx.save(); 
+    ctx.translate(x, y); 
+
+    switch (edificacao.shape) {
+        case 'cross':
+        case 'cross_rural':
+            ctx.fillRect(-halfSize, -2, size, 4);
+            ctx.fillRect(-2, -halfSize, 4, size);
+            break;
+        case 'h_symbol':
+            ctx.font = `${size * 0.8}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('H', 0, 0);
+            break;
+        case 'hat':
+        case 'school_house':
+            ctx.fillRect(-halfSize, 0, size, halfSize);
+            ctx.beginPath();
+            ctx.moveTo(-halfSize - 5, 0);
+            ctx.lineTo(0, -halfSize);
+            ctx.lineTo(halfSize + 5, 0);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            break;
+        case 'bus_station':
+            ctx.fillRect(-halfSize, -halfSize, size, size);
+            ctx.beginPath();
+            ctx.moveTo(-size, 0);
+            ctx.lineTo(size, 0);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = edificacao.color;
+            ctx.stroke();
+            ctx.lineWidth = 1;
+            break;
+        case 'square':
+        case 'community_center':
+            ctx.fillRect(-halfSize, -halfSize, size, size);
+            ctx.strokeRect(-halfSize, -halfSize, size, size);
+            break;
+        case 'cross_grave':
+            ctx.fillRect(-2, -halfSize, 4, size);
+            ctx.fillRect(-halfSize / 2, -2, halfSize, 4);
+            break;
+        case 'plane':
+            ctx.beginPath();
+            ctx.moveTo(-size, 0);
+            ctx.lineTo(size, 0);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, -size / 2);
+            ctx.moveTo(-size / 2, -size / 4);
+            ctx.lineTo(size / 2, -size / 4);
+            ctx.stroke();
+            break;
+        case 'church':
+            ctx.fillRect(-halfSize, 0, size, halfSize);
+            ctx.beginPath();
+            ctx.moveTo(-halfSize, 0);
+            ctx.lineTo(0, -size / 2);
+            ctx.lineTo(halfSize, 0);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, -size / 2 - 5);
+            ctx.lineTo(0, -size / 2 - 15);
+            ctx.moveTo(-5, -size / 2 - 10);
+            ctx.lineTo(5, -size / 2 - 10);
+            ctx.stroke();
+            break;
+        case 'tree':
+            ctx.beginPath();
+            ctx.arc(0, -size / 3, size / 3, 0, Math.PI * 2, true);
+            ctx.fill();
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.fillRect(-2, 0, 4, size / 3);
+            break;
+        case 'cart':
+            ctx.strokeRect(-halfSize, -halfSize, size, size);
+            ctx.beginPath();
+            ctx.moveTo(halfSize, -halfSize);
+            ctx.lineTo(halfSize + 5, -halfSize / 2);
+            ctx.stroke();
+            break;
+        case 'cutlery':
+            ctx.fillRect(-halfSize, -halfSize, 4, size);
+            ctx.fillRect(-halfSize, -halfSize, 8, 4);
+            ctx.beginPath();
+            ctx.moveTo(halfSize, -halfSize);
+            ctx.lineTo(halfSize, halfSize);
+            ctx.lineTo(halfSize - 5, halfSize - 10);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            break;
+        case 'fire_truck':
+            ctx.fillRect(-halfSize, -halfSize / 2, size, size / 2);
+            ctx.fillRect(-halfSize + 5, -halfSize, size - 10, size / 2);
+            ctx.beginPath();
+            ctx.arc(-halfSize + 3, halfSize / 2, 3, 0, Math.PI * 2);
+            ctx.arc(halfSize - 3, halfSize / 2, 3, 0, Math.PI * 2);
+            ctx.fill();
+            break;
+        case 'shield':
+            ctx.beginPath();
+            ctx.moveTo(0, -halfSize);
+            ctx.lineTo(halfSize, halfSize / 2);
+            ctx.lineTo(0, halfSize);
+            ctx.lineTo(-halfSize, halfSize / 2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            break;
+        case 'bench':
+            ctx.fillRect(-halfSize, 0, size, 5);
+            ctx.fillRect(-halfSize, -halfSize / 2, 5, halfSize / 2);
+            ctx.fillRect(halfSize - 5, -halfSize / 2, 5, halfSize / 2);
+            break;
+        case 'envelope':
+            ctx.beginPath();
+            ctx.moveTo(-halfSize, halfSize);
+            ctx.lineTo(0, -halfSize);
+            ctx.lineTo(halfSize, halfSize);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillRect(-halfSize, halfSize / 2, size, halfSize / 2);
+            break;
+        case 'dollar_sign':
+            ctx.font = `${size * 0.9}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('$', 0, 0);
+            break;
+        case 'book':
+            ctx.fillRect(-halfSize, -halfSize, size, size);
+            ctx.beginPath();
+            ctx.moveTo(-halfSize, -halfSize);
+            ctx.lineTo(-halfSize + 5, -halfSize + 5);
+            ctx.lineTo(-halfSize + 5, halfSize + 5);
+            ctx.lineTo(-halfSize, halfSize);
+            ctx.closePath();
+            ctx.fill();
+            break;
+        case 'column':
+            ctx.fillRect(-halfSize / 2, -halfSize, halfSize, size);
+            ctx.strokeRect(-halfSize - 5, -halfSize - 5, size + 10, 5);
+            ctx.strokeRect(-halfSize - 5, halfSize, size + 10, 5);
+            break;
+        case 'mask':
+            ctx.beginPath();
+            ctx.arc(0, 0, halfSize, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(-halfSize / 3, -halfSize / 3, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(halfSize / 3, -halfSize / 3, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(0, halfSize / 3, halfSize / 4, 0, Math.PI, false);
+            ctx.stroke();
+            break;
+        case 'oval':
+            ctx.beginPath();
+            ctx.ellipse(0, 0, size, halfSize, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            break;
+        case 'factory':
+            ctx.fillRect(-halfSize, 0, size, halfSize);
+            ctx.beginPath();
+            ctx.moveTo(-halfSize, 0);
+            ctx.lineTo(0, -halfSize);
+            ctx.lineTo(halfSize, 0);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillRect(halfSize - 10, -halfSize, 10, halfSize / 2);
+            break;
+        case 'store':
+            ctx.fillRect(-halfSize, 0, size, halfSize);
+            ctx.beginPath();
+            ctx.moveTo(-halfSize, 0);
+            ctx.lineTo(0, -halfSize / 2);
+            ctx.lineTo(halfSize, 0);
+            ctx.closePath();
+            ctx.fill();
+            break;
+        case 'buildings':
+            ctx.fillRect(-halfSize, 0, halfSize - 2, halfSize);
+            ctx.fillRect(2, -halfSize / 2, halfSize - 2, size / 2 + 2);
+            ctx.fillRect(-halfSize, -halfSize / 2, size, 5);
+            break;
+        case 'bus_stop_sign':
+            ctx.fillRect(-2, -halfSize, 4, size);
+            ctx.fillRect(-halfSize, -halfSize, size, 5);
+            ctx.font = '8px Arial';
+            ctx.fillStyle = 'white';
+            ctx.fillText('P', 0, -halfSize + 2);
+            break;
+        case 'train':
+            ctx.fillRect(-halfSize, -halfSize / 2, size, size / 2);
+            ctx.beginPath();
+            ctx.arc(-halfSize + 5, halfSize / 2, 3, 0, Math.PI * 2);
+            ctx.arc(halfSize - 5, halfSize / 2, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillRect(-halfSize - 5, -halfSize / 2 + 5, 5, 5);
+            break;
+        case 'farmhouse':
+            ctx.fillRect(-halfSize, 0, size, halfSize);
+            ctx.beginPath();
+            ctx.moveTo(-halfSize, 0);
+            ctx.lineTo(0, -size / 2);
+            ctx.lineTo(halfSize, 0);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillRect(halfSize - 8, -size / 2 + 5, 4, 10);
+            break;
+        case 'silo_shape':
+            ctx.beginPath();
+            ctx.ellipse(0, 0, halfSize / 1.5, halfSize, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillRect(-halfSize / 1.5, halfSize - 5, size / 1.5, 5);
+            break;
+        case 'fences':
+            ctx.strokeStyle = edificacao.color;
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-halfSize, -halfSize, size, size);
+            ctx.beginPath();
+            ctx.moveTo(-halfSize, -halfSize / 2);
+            ctx.lineTo(halfSize, -halfSize / 2);
+            ctx.moveTo(-halfSize, halfSize / 2);
+            ctx.lineTo(halfSize, halfSize / 2);
+            ctx.stroke();
+            ctx.lineWidth = 1;
+            break;
+        case 'barn':
+            ctx.fillRect(-halfSize, 0, size, halfSize);
+            ctx.beginPath();
+            ctx.moveTo(-halfSize, 0);
+            ctx.lineTo(0, -size / 2);
+            ctx.lineTo(halfSize, 0);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = 'brown';
+            ctx.fillRect(-5, halfSize / 2, 10, halfSize / 2);
+            break;
+        case 'milk_bottle':
+            ctx.beginPath();
+            ctx.moveTo(-halfSize / 2, halfSize);
+            ctx.lineTo(-halfSize / 2, -halfSize / 2);
+            ctx.lineTo(-halfSize / 4, -halfSize);
+            ctx.lineTo(halfSize / 4, -halfSize);
+            ctx.lineTo(halfSize / 2, -halfSize / 2);
+            ctx.lineTo(halfSize / 2, halfSize);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            break;
+        case 'gas_pump':
+            ctx.fillRect(-halfSize / 2, 0, halfSize, halfSize);
+            ctx.fillRect(-halfSize / 4, -halfSize, halfSize / 2, halfSize);
+            ctx.beginPath();
+            ctx.moveTo(halfSize / 4, -halfSize / 2);
+            ctx.lineTo(halfSize / 4 + 10, -halfSize / 2 - 5);
+            ctx.stroke();
+            break;
+        case 'power_plant':
+            ctx.fillRect(-halfSize, 0, size, halfSize);
+            ctx.fillRect(-halfSize / 4, -halfSize, halfSize / 2, halfSize);
+            ctx.fillRect(halfSize / 4 - halfSize / 2, -halfSize, halfSize / 2, halfSize);
+            break;
+        case 'telecom_tower':
+            ctx.fillRect(-2, -size, 4, size * 2);
+            ctx.beginPath();
+            ctx.moveTo(-halfSize, -size / 2);
+            ctx.lineTo(halfSize, -size / 2);
+            ctx.moveTo(-halfSize + 5, 0);
+            ctx.lineTo(halfSize - 5, 0);
+            ctx.moveTo(-halfSize, size / 2);
+            ctx.lineTo(halfSize, size / 2);
+            ctx.stroke();
+            break;
+        default:
+            ctx.fillRect(-halfSize, -halfSize, size, size);
+            ctx.strokeRect(-halfSize, -halfSize, size, size);
+            break;
+    }
+
+    ctx.restore(); 
+}
+
+// Funções de Ações
+function undo() {
+    if (historyIndex > 0) {
+        historyIndex--;
+        restoreState();
+    }
+}
+
+function redo() {
+    if (historyIndex < history.length - 1) {
+        historyIndex++;
+        restoreState();
+    }
+}
+
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    history = [];
+    historyIndex = -1;
+    saveState(); 
+}
+
+function saveImage() {
+    const link = document.createElement('a');
+    link.download = 'mapa.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+}
+
+function savePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('landscape', 'px', [canvas.width, canvas.height]);
+    const imgData = canvas.toDataURL('image/png');
+    doc.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    doc.save('mapa.pdf');
+}
+
+function printCanvas() {
+    const dataUrl = canvas.toDataURL();
+    const windowContent = '<!DOCTYPE html><html><head><title>Imprimir</title></head><body>';
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write(windowContent);
+    printWindow.document.write('<img src="' + dataUrl + '" style="max-width: 100%; height: auto;">');
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+}
+
+// Inicialização
+saveState();
+
+    </script>
+</body>
+</html>

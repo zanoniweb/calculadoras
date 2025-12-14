@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISTEMA DE APOIO: CALCULADORAS & FERRAMENTAS PARA SERVIDORES</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* Base e Fontes */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: #333;
+            overflow-x: hidden;
+            background-color: #f5f7fa; /* Fundo claro */
+        }
+
+        /* Cores de destaque - Adaptadas para um tema de 'Serviços Públicos/Engenharia' */
+        :root {
+            --primary-color: #0d6efd; /* Azul primário (Padrão Bootstrap/Governo) */
+            --dark-color: #003c90; /* Azul escuro */
+            --accent-color: #198754; /* Verde de destaque (Sucesso/Confirmação) */
+            --light-bg: #f5f7fa;
+            --dark-bg: #212529; /* Cinza escuro/Preto para rodapé */
+            --text-color-dark: #2c3e50;
+        }
+
+        /* Menu de Navegação Superior - Adaptado e Fixado no Topo */
+        .menu {
+            width: 100%;
+            background-color: var(--dark-bg); /* Fundo do menu escuro */
+            padding: 10px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            position: sticky; /* Fixa o menu no topo */
+            top: 0;
+            z-index: 1000;
+        }
+
+        .menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap; /* Permite quebras de linha em telas pequenas */
+            justify-content: center;
+            gap: 10px; /* Espaçamento entre os itens */
+        }
+
+        .menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 700;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background-color: transparent; /* Fundo transparente */
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu a:hover {
+            color: var(--primary-color);
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .menu a:active {
+            color: red; /* Estilo do código original para active */
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Seção Hero - Destaque Principal (Mantida, mas simplificada) */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: #fff;
+            text-align: center;
+            padding: 80px 20px 60px; /* Reduzido o padding superior para ajustar o menu fixo */
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeInScale 1.2s ease-out;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            line-height: 1.1;
+            font-weight: 800;
+        }
+
+        .hero-content p {
+            font-size: 1.5em;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+            margin: 0 auto 30px auto;
+            font-weight: 400;
+        }
+
+        /* Seção de Recursos/Cards */
+        .services-section {
+            padding: 80px 20px;
+            text-align: center;
+            background-color: var(--light-bg);
+            position: relative;
+        }
+
+        .services-section h2 {
+            font-size: 3em;
+            margin-bottom: 60px;
+            color: var(--dark-color);
+            font-weight: 800;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .services-section h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 3px;
+        }
+
+        .services-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .service-card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 300px; /* Largura padrão dos cards */
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5px solid transparent;
+            min-height: 250px; /* Garante altura mínima para alinhamento */
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            border-image: linear-gradient(to right, var(--primary-color), var(--accent-color)) 1;
+        }
+
+        .service-card i {
+            font-size: 3.5em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover i {
+            transform: scale(1.1);
+            color: var(--dark-color);
+        }
+
+        .service-card h3 {
+            font-size: 1.8em;
+            color: var(--text-color-dark);
+            margin-bottom: 15px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .service-card p {
+            font-size: 1.1em;
+            color: #666;
+            line-height: 1.6;
+            flex-grow: 1; /* Permite que o parágrafo ocupe o espaço restante */
+        }
+        
+        /* Box de Detalhes - Adaptado */
+        .service-detail-box {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 900px;
+            margin: 80px auto 40px auto;
+            text-align: left;
+            display: none;
+            animation: fadeInExpand 0.7s ease-out;
+            border-left: 8px solid;
+            border-image: linear-gradient(to bottom, var(--primary-color), var(--accent-color)) 1;
+            position: relative;
+        }
+
+        .service-detail-box h4 {
+            font-size: 2.2em;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .service-detail-box p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 30px;
+        }
+
+        .service-detail-box .close-detail-box {
+            background: linear-gradient(90deg, #dc3545, #e65c5c);
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4);
+        }
+
+        .service-detail-box .close-detail-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(220, 53, 69, 0.6);
+        }
+
+        /* Rodapé - Simplificado */
+        footer {
+            background-color: var(--dark-bg);
+            color: #f0f0f0;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 1em;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .copyright {
+            color: #b0b0b0;
+        }
+        
+        .footer-content, .contact-info, .location-info {
+            /* Removidas as classes de layout do rodapé original para simplificar */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .footer-content p {
+            color: #d0d0d0;
+            line-height: 1.5;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1em;
+        }
+        .footer-content i {
+            font-style: italic;
+        }
+        
+        .copyright img {
+            vertical-align: middle;
+            margin-left: 10px;
+            height: 30px;
+            filter: grayscale(100%) brightness(150%);
+        }
+
+
+        /* Animações */
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes fadeInExpand {
+            from { opacity: 0; transform: translateY(30px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Media Queries para Responsividade */
+        @media (max-width: 992px) {
+            .hero-content h1 {
+                font-size: 2.8em;
+            }
+            .hero-content p {
+                font-size: 1.3em;
+            }
+            .services-section h2 {
+                font-size: 2.5em;
+            }
+            .service-card {
+                width: 45%;
+                min-height: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu ul {
+                flex-direction: column; /* Empilha os botões em telas menores */
+                align-items: center;
+            }
+            .menu a {
+                width: 90%;
+                font-size: 1.1em;
+            }
+            .hero-content h1 {
+                font-size: 2.2em;
+            }
+            .hero-content p {
+                font-size: 1.1em;
+            }
+            .services-section h2 {
+                font-size: 2em;
+            }
+            .services-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .service-card {
+                width: 90%;
+                max-width: 350px;
+                min-height: 200px;
+            }
+            .service-detail-box {
+                padding: 30px;
+            }
+            .service-detail-box h4 {
+                font-size: 1.8em;
+            }
+            .service-detail-box p {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+             .menu a {
+                font-size: 1em;
+            }
+            .hero-section {
+                padding: 60px 20px 40px;
+            }
+            .hero-content h1 {
+                font-size: 1.8em;
+            }
+            .hero-content p {
+                font-size: 1em;
+            }
+             .services-section h2 {
+                font-size: 1.6em;
+            }
+            .service-card {
+                padding: 20px;
+            }
+            .service-card h3 {
+                font-size: 1.4em;
+            }
+            .service-card i {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="menu">
+
+         <ul>
+                <li><a href="modulotres.html"><i class="fas fa-arrow-right-to-bracket"></i> Acessar Sistema</a></li>
+        </ul>
+
+    </nav>
+
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1>Sistema de Apoio a Servidores Públicos Municipais (S. A. S. P. M.)</h1>
+            <p>Calculadoras e Ferramentas otimizadas para auxiliar em rotinas administrativas, conferências de cálculos e análises de demandas.</p>
+        </div>
+    </header>
+
+    <main>
+        <section id="note-section" class="services-section" style="padding-top: 50px; padding-bottom: 50px; text-align: left;">
+             <div class="hero-content" style="max-width: 1000px; margin: 0 auto; text-align: left;">
+                <h1 style="font-size: 2.5em; color: var(--dark-color); margin-bottom: 20px; font-weight: 800;">NOTA INFORMATIVA</h1>
+                <p style="font-size: 1.2em; color: var(--text-color-dark); line-height: 1.8; margin-bottom: 40px; text-align: justify;">
+                   Informo que o site foi desenvolvido por servidor público municipal, com o propósito exclusivo de auxiliar outros servidores municipais na realização de cálculos rotineiros. Tais cálculos, quando feitos manualmente, comprometem significativamente o tempo destinado à análise de determinadas demandas administrativas que exigem conferência matemática. Nesse contexto, foram elaboradas calculadoras específicas, dois formulários (ferramentas) já disponíveis até a presente data, além de um ambiente voltado ao desenvolvimento de mapas urbanos. Ressalta-se que o referido site não possui qualquer finalidade lucrativa, sendo concebido unicamente para atender ao interesse público e promover melhorias nas práticas administrativas. Sua utilização está restrita ao apoio técnico e operacional, em conformidade com os princípios da legalidade, impessoalidade e eficiência que regem a Administração Pública.
+                </p>
+            </div>
+        </section>
+
+        <section id="resources-section" class="services-section" style="padding-top: 0;">
+            <h2>CALCULADORAS & FERRAMENTAS DISPONÍVEIS</h2>
+            <div class="services-container">
+
+                <div class="service-card" data-service="calculadora-datas">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Calculadora Diferença: Datas</h3>
+                    <p>Auxilia na apuração de datas para análise de inadimplência e possível prescrição de saldos de dívida.</p>
+                </div>
+
+                <div class="service-card" data-service="evolucao-iptu">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Calculadora Evolução Histórica IPTU</h3>
+                    <p>Compara os valores de IPTU para verificar a correção da variação histórica (1998 a 2025) e mudanças nas características edificadas. **(Atenção: Use apenas valores do IPTU, sem taxas).**</p>
+                </div>
+
+                <div class="service-card" data-service="areas-edificadas">
+                    <i class="fas fa-ruler-combined"></i>
+                    <h3>Calculadora Áreas: Edificadas</h3>
+                    <p>Auxilia na verificação de projetos arquitetônicos, identificando possíveis erros de metragens edificadas em documentos aprovados.</p>
+                </div>
+
+                <div class="service-card" data-service="saldos-iptu">
+                    <i class="fas fa-balance-scale"></i>
+                    <h3>Calculadora Saldos (Dívida Ativa): IPTU</h3>
+                    <p>Tem a finalidade de somar os saldos de dívidas ativas de IPTU (Conteúdo original truncado, completado o sentido).</p>
+                </div>
+                
+                 <div class="service-card" data-service="valor-percentual">
+                    <i class="fas fa-percentage"></i>
+                    <h3>Calculadora Variação de Valor e Percentual: IPTU</h3>
+                    <p>Calcula a variação de valor e o percentual de mudança no IPTU para uma análise detalhada.</p>
+                </div>
+                
+                 <div class="service-card" data-service="manual">
+                    <i class="fas fa-book-open"></i>
+                    <h3>Micro Manual</h3>
+                    <p>Acesse um micro manual com informações úteis para as rotinas de trabalho.</p>
+                </div>
+                
+                 <div class="service-card" data-service="cartografia">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>Mapas Temáticos</h3>
+                    <p>Ambiente para desenvolvimento e visualização de mapas urbanos (com foco nos servidores e também no público infantil).</p>
+                </div>
+                
+                 <div class="service-card" data-service="prescricao">
+                    <i class="fas fa-file-signature"></i>
+                    <h3>Formulário de Prescrição</h3>
+                    <p>Utilize um formulário dedicado para a análise e controle de prescrição de dívidas.</p>
+                </div>
+                
+                 <div class="service-card" data-service="projetos-pendentes">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>Projetos Pendentes Edificações</h3>
+                    <p>Acompanhe e gerencie a lista de projetos de edificações que estão pendentes de análise ou conclusão.</p>
+                </div>
+
+
+                </div>
+            
+            <div id="detail-box-calculadora-datas" class="service-detail-box">
+                <h4><i class="fas fa-calendar-alt"></i> Calculadora Diferença: Datas</h4>
+                <p>Detalhe: Esta calculadora tem a finalidade de auxiliar na apuração de datas de um saldo de dívida no tocante à sua inadimplência e uma possível data de prescrição ou não.</p>
+                <button class="close-detail-box">Fechar Detalhes</button>
+            </div>
+            <div id="detail-box-evolucao-iptu" class="service-detail-box">
+                <h4><i class="fas fa-chart-line"></i> Calculadora Evolução Histórica IPTU</h4>
+                <p>Detalhe: A calculadora permite comparar os valores que incidem sobre uma edificação e se a variação está correta, ou se ocorreram mudanças nas características da área edificada que impactaram no fator da correção de IPTU. Está informada com o histórico de correções de 1998 até 2025. **Observação: deve-se utilizar na calculadora apenas os valores dos IPTUs, sem os valores das taxas.**</p>
+                <button class="close-detail-box">Fechar Detalhes</button>
+            </div>
+            <div id="detail-box-areas-edificadas" class="service-detail-box">
+                <h4><i class="fas fa-ruler-combined"></i> Calculadora Áreas: Edificadas</h4>
+                <p>Detalhe: Ferramenta para auxiliar na verificação de projetos arquitetônicos produzidos por arquitetos e aprovados pela Secretaria Municipal de Obras, porém, que apontam erros de metragens edificadas.</p>
+                <button class="close-detail-box">Fechar Detalhes</button>
+            </div>
+            <div id="detail-box-saldos-iptu" class="service-detail-box">
+                <h4><i class="fas fa-balance-scale"></i> Calculadora Saldos (Dívida Ativa): IPTU</h4>
+                <p>Detalhe: Esta calculadora tem a finalidade de somar os saldos individuais de IPTU na Dívida Ativa para facilitar as conferências.</p>
+                <button class="close-detail-box">Fechar Detalhes</button>
+            </div>
+             <div id="detail-box-valor-percentual" class="service-detail-box">
+                <h4><i class="fas fa-percentage"></i> Calculadora Variação de Valor e Percentual: IPTU</h4>
+                <p>Detalhe: Permite calcular a diferença de valor e o percentual dessa diferença entre dois períodos ou montantes de IPTU.</p>
+                <button class="close-detail-box">Fechar Detalhes</button>
+            </div>
+             <div id="detail-box-manual" class="service-detail-box">
+                <h4><i class="fas fa-book-open"></i> Micro Manual</h4>
+                <p>Detalhe: Conteúdo resumido para consulta rápida de procedimentos e informações essenciais da rotina administrativa.</p>
+                <button class="close-detail-box">Fechar Detalhes</button>
+            </div>
+             <div id="detail-box-cartografia" class="service-detail-box">
+                <h4><i class="fas fa-map-marked-alt"></i> Mapas Temáticos</h4>
+                <p>Detalhe: Ambiente para o desenvolvimento e visualização de mapas urbanos, pensado também para o público infantil (ferramenta de educação cívica e geográfica).</p>
+                <button class="close-detail-box">Fechar Detalhes</button>
+            </div>
+             <div id="detail-box-prescricao" class="service-detail-box">
+                <h4><i class="fas fa-file-signature"></i> Formulário de Prescrição</h4>
+                <p>Detalhe: Formulário especializado para o registro e controle de informações relacionadas à prescrição de débitos.</p>
+                <button class="close-detail-box">Fechar Detalhes</button>
+            </div>
+             <div id="detail-box-projetos-pendentes" class="service-detail-box">
+                <h4><i class="fas fa-clipboard-list"></i> Projetos Pendentes Edificações</h4>
+                <p>Detalhe: Área para acompanhamento e gestão dos projetos de edificações que aguardam análise ou solução administrativa.</p>
+                <button class="close-detail-box">Fechar Detalhes</button>
+            </div>
+            
+            
+        </section>
+    </main>
+
+    <footer>
+
+        <div class="copyright">
+            <p>
+                <i>
+                © 2025 Web Programa Sistema de Apoio a Servidores Públicos Municipais (S. A. S. P. M.). Todos os direitos reservados a Juliano <img src="https://d1yei2z3i6k35z.cloudfront.net/6946809/65e45ac72773e_zanoni.1.png" alt="Logo de Juliano Zanoni">
+                </i>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.service-card');
+            const detailBoxes = document.querySelectorAll('.service-detail-box');
+            const closeButtons = document.querySelectorAll('.close-detail-box');
+
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    detailBoxes.forEach(box => {
+                        box.style.display = 'none';
+                    });
+
+                    // O serviceId corresponde ao data-service do card
+                    const serviceId = card.getAttribute('data-service');
+                    const detailBox = document.getElementById(`detail-box-${serviceId}`);
+                    
+                    if (detailBox) {
+                        detailBox.style.display = 'block';
+                        // Rola a tela para o box de detalhes
+                        detailBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+            });
+
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const parentBox = button.closest('.service-detail-box');
+                    if (parentBox) {
+                        parentBox.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

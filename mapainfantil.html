@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB PROGRAMA SISTEMA DE APOIO A SERVIDORES PÚBLICOS MUNICIPAIS (S. A. S. P. M.): Editor de Mapas Urbanos</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #0057b7;
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-container {
+            display: flex;
+            flex-grow: 1;
+            padding: 2rem;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .sidebar {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            min-width: 250px;
+        }
+
+        .toolbar-section h3 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: #0057b7;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0.5rem;
+        }
+
+        .tool-input, .tool-select {
+            width: 100%;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .action-button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #0057b7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        .action-button:hover {
+            background-color: #003d82;
+            transform: translateY(-2px);
+        }
+
+        .canvas-section {
+            flex-grow: 1;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .canvas-container {
+            position: relative;
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+            cursor: crosshair;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+
+        .compass {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .direction {
+            position: absolute;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .north { top: -15px; }
+        .northeast { top: -8px; right: -8px; transform: rotate(45deg); }
+        .east { right: -15px; }
+        .southeast { bottom: -8px; right: -8px; transform: rotate(135deg); }
+        .south { bottom: -15px; }
+        .southwest { bottom: -8px; left: -8px; transform: rotate(-135deg); }
+        .west { left: -15px; }
+        .northwest { top: -8px; left: -8px; transform: rotate(-45deg); }
+
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #333;
+            color: white;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .sidebar {
+                min-width: auto;
+                padding: 1rem;
+            }
+        }
+        /* Estilos para telas grandes (desktops) - acima de 1200px */
+        @media (min-width: 1200px) {
+            .main-container {
+                padding: 3rem;
+                gap: 3rem;
+            }
+
+            .sidebar {
+                min-width: 300px;
+            }
+        }
+
+        /* Estilos para telas médias (tablets) - 769px a 1199px */
+        @media (min-width: 769px) and (max-width: 1199px) {
+            .main-container {
+                padding: 1.5rem;
+                gap: 1.5rem;
+            }
+
+            .sidebar {
+                min-width: 220px;
+            }
+        }
+
+        /* Estilos para telas pequenas (smartphones) - 481px a 768px */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-width: auto;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .toolbar-section, .actions {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+
+/* estilo básico do header */
+header {
+  background-color: #2c3e50;   /* cor de fundo */
+  padding: 10px 20px;
+}
+
+/* lista de navegação */
+.nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;              /* itens lado a lado */
+  justify-content: flex-end;  /* botão "Sair" à direita */
+}
+
+/* item da lista */
+.nav-item {
+  margin-left: 15px;
+}
+
+/* link */
+.nav-link {
+  text-decoration: none;
+  color: #ecf0f1;             /* cor clara */
+  font-weight: bold;
+  padding: 8px 15px;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+/* efeito hover */
+.nav-link:hover {
+  background-color: #34495e;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;   /* empilha os itens */
+    align-items: flex-start;  /* alinha à esquerda */
+  }
+
+  .nav-item {
+    margin: 10px 0;
+  }
+
+  .nav-link {
+    display: block;
+    width: 100%;              /* ocupa toda a largura */
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 5px 10px;
+  }
+
+  .nav-link {
+    font-size: 14px;          /* texto menor em telas pequenas */
+    padding: 6px 10px;
+  }
+}
+
+    </style>
+
+</head>
+
+<div>
+<header>
+
+<li class="nav-item">
+    
+<a class="nav-link" href="index.html">Sair</a>
+
+</li>
+
+</header>
+</div>
+
+<body>
+    <header class="header">
+        <h1>Web Programa Sistema de Apoio a Servidores Públicos Municipais (S. A. S. P. M.): Editor de Mapas Urbanos - Público Infantil.</h1>
+    </header>
+
+    <main class="main-container">
+        <aside class="sidebar">
+            <div class="toolbar-section">
+                <h3>Ferramentas</h3>
+                <div class="tool-options">
+                    <input type="color" id="colorPicker" value="#0057b7" class="tool-input">
+                    <select id="toolSelector" class="tool-select">
+                        <option value="pencil">Lápis</option>
+                        <option value="eraser">Borracha</option>
+                        <option value="line">Linha</option>
+                        <option value="circle">Círculo</option>
+                        <option value="rectangle">Retângulo</option>
+                        <option value="triangle">Triângulo</option>
+                        <option value="text">Texto</option>
+                    </select>
+                    <input type="range" id="brushSize" min="1" max="20" value="3" class="tool-input">
+                    <input type="range" id="textSize" min="10" max="100" value="24" class="tool-input">
+                </div>
+            </div>
+
+            <div class="toolbar-section">
+                <h3>Edificações</h3>
+                <select id="edificacaoSelector" class="tool-select">
+                    <option value="" disabled selected>Selecione uma edificação</option>
+                    <option value="postoSaude">Posto de Saúde</option>
+                    <option value="hospital">Hospital</option>
+                    <option value="escolaPublica">Escola Pública</option>
+                    <option value="rodoviaria">Rodoviária</option>
+                    <option value="edificacaoPublica">Edificação Pública</option>
+                    <option value="cemiterio">Cemitério</option>
+                    <option value="aeroporto">Aeroporto</option>
+                    <option value="igreja">Igreja</option>
+                    <option value="parque">Parque</option>
+                    <option value="supermercado">Supermercado</option>
+                    <option value="restaurante">Restaurante</option>
+                    <option value="bombeiros">Corpo de Bombeiros</option>
+                    <option value="policia">Delegacia de Polícia</option>
+                    <option value="praca">Praça</option>
+                </select>
+            </div>
+
+            <div class="toolbar-section actions">
+                <h3>Ações</h3>
+                <button onclick="undo()" class="action-button">Desfazer</button>
+                <button onclick="redo()" class="action-button">Refazer</button>
+                <button onclick="clearCanvas()" class="action-button">Limpar</button>
+                <button onclick="saveImage()" class="action-button">Salvar Imagem</button>
+                <button onclick="savePDF()" class="action-button">Salvar PDF</button>
+                <button onclick="printCanvas()" class="action-button">Imprimir</button>
+            </div>
+        </aside>
+
+        <section class="canvas-section">
+            <div id="container" class="canvas-container">
+                <canvas id="mapCanvas" width="900" height="650"></canvas>
+                <div class="compass">
+                    <div class="direction north">N</div>
+                    <div class="direction northeast">NE</div>
+                    <div class="direction east">E</div>
+                    <div class="direction southeast">SE</div>
+                    <div class="direction south">S</div>
+                    <div class="direction southwest">SO</div>
+                    <div class="direction west">O</div>
+                    <div class="direction northwest">NO</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+    <i>
+
+        © 2025 Web Programa Sistema de Apoio a Servidores Públicos Municipais (S. A. S. P. M.). Todos os direitos reservados a Juliano <img src="https://d1yei2z3i6k35z.cloudfront.net/6946809/65e45ac72773e_zanoni.1.png" alt="Logo de Juliano Zanoni">
+    </i>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script>
+        // Variáveis e Configurações Iniciais
+        const canvas = document.getElementById("mapCanvas");
+        const ctx = canvas.getContext("2d");
+        const toolSelector = document.getElementById("toolSelector");
+        const colorPicker = document.getElementById("colorPicker");
+        const brushSize = document.getElementById("brushSize");
+        const edificacaoSelector = document.getElementById("edificacaoSelector");
+        const textSize = document.getElementById("textSize");
+
+        let drawing = false;
+        let startX, startY;
+        let objects = [];
+        let history = [];
+        let redoStack = [];
+
+        let currentTool = "pencil";
+        let currentObject = null;
+
+        // --- Event Listeners ---
+        toolSelector.addEventListener("change", (e) => {
+            currentTool = e.target.value;
+            canvas.style.cursor = currentTool === "text" ? "text" : "crosshair";
+            if (currentTool === "eraser") {
+                colorPicker.disabled = true;
+            } else {
+                colorPicker.disabled = false;
+            }
+        });
+
+        edificacaoSelector.addEventListener("change", (e) => {
+            currentTool = "edificacao";
+            toolSelector.value = "edificacao";
+            canvas.style.cursor = "crosshair";
+        });
+
+        // --- Funções de Estado e Histórico ---
+        function saveState() {
+            redoStack = [];
+            history.push(JSON.parse(JSON.stringify(objects)));
+            if (history.length > 20) history.shift();
+        }
+
+        function restoreState(state) {
+            objects = JSON.parse(JSON.stringify(state));
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            objects.forEach(obj => {
+                drawObject(obj);
+            });
+        }
+
+        // --- Eventos do Mouse ---
+        canvas.addEventListener("mousedown", (e) => {
+            drawing = true;
+            startX = e.offsetX;
+            startY = e.offsetY;
+
+            if (currentTool === "text") {
+                currentObject = {
+                    tool: "text",
+                    color: colorPicker.value,
+                    size: textSize.value,
+                    points: [{ x: startX, y: startY }],
+                    text: null,
+                    rotation: 0
+                };
+            } else if (currentTool === "edificacao") {
+                const type = edificacaoSelector.value;
+                if (type) {
+                    objects.push({
+                        tool: "edificacao",
+                        type: type,
+                        points: [{ x: startX, y: startY }],
+                    });
+                    saveState();
+                    redrawAll();
+                    // Voltando para o lápis após inserir a edificação (opcional, mas prático)
+                    edificacaoSelector.value = ""; 
+                    currentTool = "pencil";
+                }
+            } else {
+                saveState();
+                currentObject = {
+                    tool: currentTool,
+                    color: currentTool === "eraser" ? "#fff" : colorPicker.value,
+                    size: brushSize.value,
+                    points: [{ x: startX, y: startY }]
+                };
+            }
+        });
+
+        canvas.addEventListener("mousemove", (e) => {
+            if (!drawing || currentTool === "edificacao") return;
+            const x = e.offsetX, y = e.offsetY;
+
+            if (currentObject) {
+                if (currentTool === "pencil" || currentTool === "eraser") {
+                    currentObject.points.push({ x: x, y: y });
+                } else {
+                    currentObject.points[1] = { x: x, y: y };
+                }
+                redrawAll();
+            }
+        });
+
+        canvas.addEventListener("mouseup", (e) => {
+            if (!drawing) return;
+
+            if (currentObject) {
+                if (currentTool === "text") {
+                    const text = prompt("Digite o texto:");
+                    if (text) {
+                        currentObject.text = text;
+                        const rotation = prompt("Digite o ângulo de rotação (em graus, 0 para horizontal, 90 para vertical):");
+                        currentObject.rotation = rotation ? parseFloat(rotation) : 0;
+                    }
+                }
+                objects.push(currentObject);
+                saveState();
+                redrawAll();
+            }
+
+            drawing = false;
+            currentObject = null;
+        });
+
+        canvas.addEventListener("mouseout", () => {
+            drawing = false;
+        });
+
+        // --- Funções de Desenho Principal ---
+        function redrawAll() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            objects.forEach(obj => {
+                drawObject(obj);
+            });
+            if (currentObject && currentTool !== "text") {
+                drawObject(currentObject);
+            }
+        }
+
+        function drawObject(obj) {
+            ctx.strokeStyle = obj.color;
+            ctx.lineWidth = obj.size;
+            ctx.fillStyle = obj.color;
+
+            switch (obj.tool) {
+                case "pencil":
+                case "eraser":
+                    ctx.beginPath();
+                    ctx.lineJoin = "round";
+                    ctx.lineCap = "round";
+                    ctx.moveTo(obj.points[0].x, obj.points[0].y);
+                    obj.points.forEach(point => ctx.lineTo(point.x, point.y));
+                    ctx.stroke();
+                    break;
+                case "line":
+                    drawLine(obj.points[0], obj.points[1]);
+                    break;
+                case "rectangle":
+                    drawRect(obj.points[0], obj.points[1]);
+                    break;
+                case "circle":
+                    drawCircle(obj.points[0], obj.points[1]);
+                    break;
+                case "triangle":
+                    drawTriangle(obj.points[0], obj.points[1]);
+                    break;
+                case "text":
+                    drawText(obj);
+                    break;
+                case "edificacao":
+                    drawEdificacao(obj.type, obj.points[0].x, obj.points[0].y);
+                    break;
+            }
+        }
+
+        // --- Funções de Desenho Geométrico ---
+        function drawLine(p1, p2) {
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+        }
+
+        function drawRect(p1, p2) {
+            // Desenha apenas o contorno
+            ctx.strokeRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y); 
+        }
+
+        function drawCircle(p1, p2) {
+            const radius = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+            ctx.beginPath();
+            ctx.arc(p1.x, p1.y, radius, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        function drawTriangle(p1, p2) {
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            // Calcula o terceiro ponto para formar um triângulo isósceles (simples)
+            ctx.lineTo(p1.x - (p2.x - p1.x), p2.y); 
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        function drawText(obj) {
+            ctx.font = `${obj.size}px Arial`;
+            ctx.fillStyle = obj.color;
+            ctx.textAlign = 'center';
+
+            ctx.save();
+            ctx.translate(obj.points[0].x, obj.points[0].y);
+            ctx.rotate(obj.rotation * Math.PI / 180);
+            ctx.fillText(obj.text, 0, 0);
+            ctx.restore();
+        }
+
+        // Funções de desenho de edificações
+        function drawEdificacao(type, x, y) {
+            let size = 30;
+            ctx.font = `${size}px Arial`;
+            ctx.textAlign = 'center';
+
+            switch(type) {
+                case 'postoSaude': ctx.fillText('🏥', x, y); break;
+                case 'hospital': ctx.fillText('➕', x, y); break;
+                case 'escolaPublica': ctx.fillText('🎓', x, y); break;
+                case 'rodoviaria': ctx.fillText('🚌', x, y); break;
+                case 'edificacaoPublica': ctx.fillText('🏢', x, y); break;
+                case 'cemiterio': ctx.fillText('⚰️', x, y); break;
+                case 'aeroporto': ctx.fillText('✈️', x, y); break;
+                case 'igreja': ctx.fillText('⛪', x, y); break;
+                case 'parque': ctx.fillText('🌳', x, y); break;
+                case 'supermercado': ctx.fillText('🛒', x, y); break;
+                case 'restaurante': ctx.fillText('🍽️', x, y); break;
+                case 'bombeiros': ctx.fillText('🚒', x, y); break;
+                case 'policia': ctx.fillText('🚓', x, y); break;
+                case 'praca': ctx.fillText('⛲', x, y); break;
+            }
+        }
+
+
+        // --- Funções de Controle (Expostas Globalmente) ---
+
+        /**
+         * Desfaz a última ação no histórico.
+         */
+        function undo() {
+            if (history.length > 1) {
+                const currentState = history.pop();
+                redoStack.push(currentState);
+                restoreState(history[history.length - 1]);
+            } else if (history.length === 1) {
+                const currentState = history.pop();
+                redoStack.push(currentState);
+                clearCanvas(false); // Limpa sem resetar o histórico, mas adiciona o estado vazio
+            }
+        }
+
+        /**
+         * Refaz a última ação desfeita.
+         */
+        function redo() {
+            if (redoStack.length > 0) {
+                const nextState = redoStack.pop();
+                history.push(nextState);
+                restoreState(nextState);
+            }
+        }
+        
+        /**
+         * Limpa todo o canvas e zera o histórico.
+         * @param {boolean} resetHistory - Se deve limpar o histórico (padrão é true).
+         */
+        function clearCanvas(resetHistory = true) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            objects = [];
+            if (resetHistory) {
+                history = [];
+                redoStack = [];
+                // Adiciona um estado vazio após a limpeza total
+                saveState(); 
+            }
+        }
+
+        /**
+         * Salva o canvas como uma imagem PNG.
+         */
+        function saveImage() {
+            const link = document.createElement('a');
+            link.download = 'mapa_urbano.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        /**
+         * Salva o canvas como um documento PDF usando jspdf.
+         * CORRIGIDA para melhor compatibilidade com a biblioteca.
+         */
+        function savePDF() {
+            if (window.jspdf && window.jspdf.jsPDF) {
+                const jsPDF = window.jspdf.jsPDF;
+                // Configuração para A4 paisagem (l, mm, a4)
+                const pdf = new jsPDF('l', 'mm', 'a4'); 
+                const imgData = canvas.toDataURL('image/png');
+                
+                // Dimensões A4 em mm: 297 x 210. Usando 10mm de margem.
+                const pdfWidth = 277;
+                const pdfHeight = 190;
+                
+                // Adiciona a imagem no PDF (PNG, x=10, y=10, width, height)
+                pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight); 
+                pdf.save("mapa_urbano.pdf");
+            } else {
+                alert("Erro: A biblioteca jspdf não foi carregada corretamente. Verifique o link do script.");
+            }
+        }
+
+        /**
+         * Imprime o conteúdo do canvas.
+         */
+        function printCanvas() {
+            const dataUrl = canvas.toDataURL();
+            const windowContent = `<!DOCTYPE html>
+<html>
+<head><title>Imprimir Mapa</title></head>
+<body>
+    <img src="${dataUrl}" style="max-width: 100%;">
+</body>
+</html>`;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(windowContent);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        }
+
+        // --- Inicialização (Chamada no Final do Script) ---
+        clearCanvas(); // Inicializa o canvas e o histórico
+    </script> 
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB PROGRAMA SISTEMA DE APOIO A SERVIDORES PÚBLICOS MUNICIPAIS (S. A. S. P. M.) - ACESSO PARA SERVIDORES DE CARREIRA. CALCULADORAS & FERRAMENTAS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <style>
+        /* Estilos personalizados */
+        body {
+            background-color: #f8f9fa;
+        }
+        .header-bg {
+            /* Cor de fundo para o cabeçalho, mantendo o padrão */
+            background-color: #007bff; 
+            color: #fff;
+        }
+        .card-service {
+            border-radius: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            cursor: pointer;
+            height: 100%; /* Garante que todos tenham a mesma altura */
+        }
+        .card-service:hover {
+            transform: translateY(-5px);
+        }
+        .card-service .card-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1.5rem; /* Ajuste o padding interno */
+        }
+        .card-service .icon {
+            /* A classe 'icon' será usada tanto para 'bi' quanto para 'fas' */
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #007bff; /* Cor primária do Bootstrap */
+        }
+        .card-service h5 {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .card-service p {
+            font-size: 0.9rem;
+            color: #6c757d;
+            flex-grow: 1; /* Permite que o parágrafo ocupe o espaço restante */
+        }
+        
+        /* Ajuste do Título da Seção */
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #343a40;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">S. A. S. P. M.</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    </ul>
+                <ul class="navbar-nav">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Sair</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="header-bg py-5 mb-4">
+        <div class="container text-center">
+            <h1>WEB PROGRAMA SISTEMA DE APOIO A SERVIDORES PÚBLICOS MUNICIPAIS (S. A. S. P. M.): CALCULADORAS & FERRAMENTAS</h1>
+            <p class="lead">Acesso rápido a rotinas de análise e verificação de dados</p>
+        </div>
+    </header>
+
+    <main class="container mb-5">
+        
+        <h2 class="section-title">RECURSOS DISPONÍVEIS</h2>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+
+            <div class="col">
+                <a href="calculadoradiferencadatas.html" class="card card-service h-100" style="text-decoration: none; color: inherit;" data-service="calculadora-datas">
+                    <div class="card-body">
+                        <i class="fas fa-calendar-alt icon"></i>
+                        <h5 class="card-title">Calculadora Diferença: Datas</h5>
+                        <p class="card-text">Auxilia na apuração de datas para análise de inadimplência e possível prescrição de saldos de dívida.</p>
+                    </div>
+                </a> 
+            </div>
+
+            <div class="col">
+                <a href="calculadorahistoricaiptu.html" class="card card-service h-100" style="text-decoration: none; color: inherit;" data-service="evolucao-iptu">
+                    <div class="card-body">
+                        <i class="fas fa-chart-line icon"></i>
+                        <h5 class="card-title">Evolução Histórica IPTU</h5>
+                        <p class="card-text">Compara os valores de IPTU para verificar a correção da variação histórica (1998 a 2025). **(Use apenas valores do IPTU, sem taxas).**</p>
+                    </div>
+                </a> 
+            </div>
+
+            <div class="col">
+                <a href="calculadoraareas.html" class="card card-service h-100" style="text-decoration: none; color: inherit;" data-service="areas-edificadas">
+                    <div class="card-body">
+                        <i class="fas fa-ruler-combined icon"></i>
+                        <h5 class="card-title">Calculadora Áreas: Edificadas</h5>
+                        <p class="card-text">Auxilia na verificação de projetos arquitetônicos, identificando possíveis erros de metragens edificadas.</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="calculadorasaldo.html" class="card card-service h-100" style="text-decoration: none; color: inherit;" data-service="saldos-iptu">
+                    <div class="card-body">
+                        <i class="fas fa-balance-scale icon"></i>
+                        <h5 class="card-title">Calculadora Saldos (Dívida Ativa): IPTU</h5>
+                        <p class="card-text">Tem a finalidade de somar os saldos de dívidas ativas de IPTU para análise de débitos.</p>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col">
+                <a href="calculadoravalorpercentual.html" class="card card-service h-100" style="text-decoration: none; color: inherit;" data-service="valor-percentual">
+                    <div class="card-body">
+                        <i class="fas fa-percentage icon"></i>
+                        <h5 class="card-title">Variação de Valor e Percentual: IPTU</h5>
+                        <p class="card-text">Calcula a variação de valor e o percentual de mudança no IPTU para uma análise detalhada.</p>
+                    </div>
+                </a> 
+            </div>
+            
+            <div class="col">
+                <a href="micromanual.html" class="card card-service h-100" style="text-decoration: none; color: inherit;" data-service="manual">
+                    <div class="card-body">
+                        <i class="fas fa-book-open icon"></i>
+                        <h5 class="card-title">Micro Manual</h5>
+                        <p class="card-text">Acesse um micro manual com informações úteis e guias para as rotinas de trabalho.</p>
+                    </div>
+                </a> 
+            </div>
+
+            <div class="col">
+                <a href="mapatecnicotres.html" class="card card-service h-100" style="text-decoration: none; color: inherit;" data-service="cartografia">
+                    <div class="card-body">
+                        <i class="fas fa-map-marked-alt icon"></i>
+                        <h5 class="card-title">Mapas Temáticos (ferramenta)</h5>
+                        <p class="card-text">Ambiente destinado a edição de mapas temáticos urbanos.</p>
+                    </div>
+                </a> 
+            </div>
+            
+            <div class="col">
+                <a href="prescricao.html" class="card card-service h-100" style="text-decoration: none; color: inherit;" data-service="prescricao">
+                    <div class="card-body">
+                        <i class="fas fa-file-signature icon"></i>
+                        <h5 class="card-title">Formulário de Prescrição (ferramenta)</h5>
+                        <p class="card-text">Utilize um formulário dedicado para a análise e controle de prescrição de dívidas.</p>
+                    </div>
+                </a> 
+            </div>
+            
+            <div class="col">
+                <a href="projetospendentes.html" class="card card-service h-100" style="text-decoration: none; color: inherit;" data-service="projetos-pendentes">
+                    <div class="card-body">
+                        <i class="fas fa-clipboard-list icon"></i>
+                        <h5 class="card-title">Projetos Pendentes Edificações (ferramenta)</h5>
+                        <p class="card-text">Colete de forma adequada as informações das edificações e gerencie a lista de projetos de edificações que estão pendentes de análise ou conclusão.</p>
+                    </div>
+                </a> 
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-light text-center py-3 mt-5">
+        <div class="container">
+            <i>
+
+            © 2025 Web Programa Sistema de Apoio a Servidores Públicos Municipais (S. A. S. P. M.). Todos os direitos reservados a Juliano <img src="https://d1yei2z3i6k35z.cloudfront.net/6946809/65e45ac72773e_zanoni.1.png" alt="Logo de Juliano Zanoni">
+        
+            </i>
+        
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
