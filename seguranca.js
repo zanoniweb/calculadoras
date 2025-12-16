@@ -1,6 +1,6 @@
 // Dados dos usuários para login
         const users = [
-            { username: "jzanoniweb", password: "senha123adm", page: "geracaodocumentosservidores.html" },
+            { username: "jzanoni", password: "180804", page: "geracaodocumentosservidores.html" },
             { username: "dloni", password: "senha457adm", page: "geracaodocumentosservidores.html" },
             { username: "danicadastramento", password: "senha897adm", page: "geracaodocumentosservidores.html" },
             { username: "joaocadastramento", password: "senha675adm", page: "geracaodocumentosservidores.html" },
